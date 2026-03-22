@@ -1,0 +1,31 @@
+paths:
+  # FAISS 字体特征库路径
+  font_lib_path: "models/font_lib"
+  # XGBoost 全局排版校验模型路径
+  xgb_model_path: "models/global_layout_model.pkl"
+  # 日志文件路径
+  log_file: "logs/system_run.log"
+
+dataset:
+  image_dir: "images"
+  json_dir: "locate_json"
+
+# 【新增】业务规则与几何参数
+business_rules:
+  roi_expand_margin: 15          # 局部微观分析时的外扩像素边距
+  max_core_text_length: 15       # 核心金额字符串最大长度（超过此长度视为订单号/非核心项）
+
+# 【新增】自适应判定权重
+weights:
+  core_pixel: 0.60               # 核心字段：像素异常的权重
+  core_font: 0.40                # 核心字段：字体异常的权重
+  non_core_pixel: 0.80           # 非核心字段：纯像素异常的权重
+
+# 【更新】全局阈值控制中心
+thresholds:
+  global_fake: 0.65              # 全局大模型风险 > 此值，判定排版异常
+  pixel_anomaly_alert: 0.60      # 局部像素风险 > 此值，触发拼接涂抹报警
+  exempt_pixel_safe: 0.40        # 非核心字段的像素风险 < 此值，直接豁免清零
+
+  suspect_high: 0.65             # 综合风险率 > 此值，最终定性为“篡改”
+  suspect_low: 0.50              # 综合风险率 > 此值，最终定性为“可疑”
