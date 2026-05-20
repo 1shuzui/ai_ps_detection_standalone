@@ -1,0 +1,82 @@
+{
+  "image_path": "images\\no (8).jpg",
+  "width": 720,
+  "height": 1600,
+  "key_regions": [
+    {
+      "text": "140",
+      "confidence": 0.5587633648227318,
+      "bbox": [
+        107,
+        93,
+        451,
+        157
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "140",
+      "confidence": 0.5587633648227318,
+      "bbox": [
+        107,
+        93,
+        451,
+        157
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "100",
+      "confidence": 0.0808077676544759,
+      "bbox": [
+        54,
+        388,
+        364,
+        412
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "100",
+      "confidence": 0.0808077676544759,
+      "bbox": [
+        54,
+        388,
+        364,
+        412
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "100",
+      "confidence": 0.0808077676544759,
+      "bbox": [
+        54,
+        388,
+        364,
+        412
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "5.为保护用户隐私。若导出凭证时选摔卞展示对方姓名。相关字段将以显号 {\"}替代显1。如需畏~对方姓名, 3.本 $徵信支付辕账电孑凭诞 .仅供参考诮以微信发付账户记录为r。 说明: 2:本 《微信支付转账电子凭诞。不褥修改或涤~。 1.本 《微偿艾付转账电子凭证》仅证明:  申诮人选择特定炎易的狙关信息。 .为保护用户隐私且考虑到微信号可能发生变更; 本凭证显示的收付款方徵信号为用户申诮凭证时经掩码处理后 在]诮时选择 *屐示对方姓名\" 井准确/写怼方姓额 收付款方徽信号 `付科拔夯",
+      "confidence": 0.031866092794345185,
+      "bbox": [
+        43,
+        724,
+        720,
+        933
+      ],
+      "type": "name",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609950.067006,
+  "ocr_success": true,
+  "detected_count": 6
+}

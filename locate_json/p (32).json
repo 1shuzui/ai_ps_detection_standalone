@@ -1,0 +1,94 @@
+{
+  "image_path": "images\\p (32).jpg",
+  "width": 1216,
+  "height": 2688,
+  "key_regions": [
+    {
+      "text": "转给 徐勇杰",
+      "confidence": 0.6980589841300617,
+      "bbox": [
+        460,
+        353,
+        762,
+        434
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "41,093:00",
+      "confidence": 0.9992117520326523,
+      "bbox": [
+        389,
+        442,
+        910,
+        579
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.932916652692752,
+      "bbox": [
+        719,
+        1107,
+        1181,
+        1169
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.932916652692752,
+      "bbox": [
+        719,
+        1107,
+        1181,
+        1169
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 10",
+      "confidence": 0.932916652692752,
+      "bbox": [
+        719,
+        1107,
+        1181,
+        1169
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 10",
+      "confidence": 0.932916652692752,
+      "bbox": [
+        719,
+        1107,
+        1181,
+        1169
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "621",
+      "confidence": 0.9927958481824102,
+      "bbox": [
+        878,
+        1224,
+        1175,
+        1280
+      ],
+      "type": "amount",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610113.005307,
+  "ocr_success": true,
+  "detected_count": 7
+}

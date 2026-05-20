@@ -1,0 +1,58 @@
+{
+  "image_path": "images\\p (30).jpg",
+  "width": 1080,
+  "height": 2374,
+  "key_regions": [
+    {
+      "text": "转给刘晓华",
+      "confidence": 0.8946999909782801,
+      "bbox": [
+        400,
+        378,
+        675,
+        459
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "21,234:00",
+      "confidence": 0.9943315015856667,
+      "bbox": [
+        345,
+        448,
+        870,
+        585
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.8951796657505834,
+      "bbox": [
+        555,
+        1575,
+        999,
+        1635
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2025 - 11 - 19",
+      "confidence": 0.8951796657505834,
+      "bbox": [
+        555,
+        1575,
+        999,
+        1635
+      ],
+      "type": "date",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610095.2480562,
+  "ocr_success": true,
+  "detected_count": 4
+}

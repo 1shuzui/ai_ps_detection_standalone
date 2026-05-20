@@ -1,0 +1,106 @@
+{
+  "image_path": "images\\p (35).jpg",
+  "width": 864,
+  "height": 1920,
+  "key_regions": [
+    {
+      "text": "311",
+      "confidence": 0.42935674799773876,
+      "bbox": [
+        295,
+        405,
+        569,
+        467
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "郭朋",
+      "confidence": 0.9907740102993071,
+      "bbox": [
+        699,
+        755,
+        771,
+        799
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "311",
+      "confidence": 0.8191172826186636,
+      "bbox": [
+        631,
+        939,
+        773,
+        977
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "311",
+      "confidence": 0.8191172826186636,
+      "bbox": [
+        631,
+        939,
+        773,
+        977
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9112466999544258,
+      "bbox": [
+        475,
+        997,
+        772,
+        1037
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9112466999544258,
+      "bbox": [
+        475,
+        997,
+        772,
+        1037
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 31",
+      "confidence": 0.9112466999544258,
+      "bbox": [
+        475,
+        997,
+        772,
+        1037
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 31",
+      "confidence": 0.9112466999544258,
+      "bbox": [
+        475,
+        997,
+        772,
+        1037
+      ],
+      "type": "date",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610130.2655308,
+  "ocr_success": true,
+  "detected_count": 8
+}

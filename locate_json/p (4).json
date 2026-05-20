@@ -1,0 +1,178 @@
+{
+  "image_path": "images\\p (4).jpg",
+  "width": 1256,
+  "height": 2760,
+  "key_regions": [
+    {
+      "text": "120",
+      "confidence": 0.22934797536388044,
+      "bbox": [
+        160,
+        350,
+        1070,
+        436
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "120",
+      "confidence": 0.22934797536388044,
+      "bbox": [
+        160,
+        350,
+        1070,
+        436
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "120",
+      "confidence": 0.22934797536388044,
+      "bbox": [
+        160,
+        350,
+        1070,
+        436
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "10:02",
+      "confidence": 0.22934797536388044,
+      "bbox": [
+        160,
+        350,
+        1070,
+        436
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "10:02",
+      "confidence": 0.22934797536388044,
+      "bbox": [
+        160,
+        350,
+        1070,
+        436
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "432",
+      "confidence": 0.45744121979948354,
+      "bbox": [
+        109,
+        423,
+        1046,
+        511
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "432",
+      "confidence": 0.45744121979948354,
+      "bbox": [
+        109,
+        423,
+        1046,
+        511
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "432",
+      "confidence": 0.45744121979948354,
+      "bbox": [
+        109,
+        423,
+        1046,
+        511
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "329",
+      "confidence": 0.4521267308939796,
+      "bbox": [
+        112,
+        1264,
+        1131,
+        1338
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "329",
+      "confidence": 0.4521267308939796,
+      "bbox": [
+        112,
+        1264,
+        1131,
+        1338
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "360",
+      "confidence": 0.655846545308834,
+      "bbox": [
+        112,
+        1330,
+        564,
+        1403
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "360",
+      "confidence": 0.655846545308834,
+      "bbox": [
+        112,
+        1330,
+        564,
+        1403
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "360",
+      "confidence": 0.5500270474069924,
+      "bbox": [
+        109,
+        2182,
+        1107,
+        2271
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "360",
+      "confidence": 0.5500270474069924,
+      "bbox": [
+        109,
+        2182,
+        1107,
+        2271
+      ],
+      "type": "amount",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610162.5293787,
+  "ocr_success": true,
+  "detected_count": 14
+}

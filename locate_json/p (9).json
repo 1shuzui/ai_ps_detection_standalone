@@ -1,0 +1,94 @@
+{
+  "image_path": "images\\p (9).jpg",
+  "width": 1280,
+  "height": 2832,
+  "key_regions": [
+    {
+      "text": "转给崔娣",
+      "confidence": 0.865146815776825,
+      "bbox": [
+        504,
+        389,
+        770,
+        476
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "31,777:00",
+      "confidence": 0.9991820172404915,
+      "bbox": [
+        397,
+        467,
+        969,
+        635
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.8442146538729546,
+      "bbox": [
+        742,
+        1198,
+        1237,
+        1263
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.8442146538729546,
+      "bbox": [
+        742,
+        1198,
+        1237,
+        1263
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 12",
+      "confidence": 0.8442146538729546,
+      "bbox": [
+        742,
+        1198,
+        1237,
+        1263
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 12",
+      "confidence": 0.8442146538729546,
+      "bbox": [
+        742,
+        1198,
+        1237,
+        1263
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "621",
+      "confidence": 0.9749852790822511,
+      "bbox": [
+        910,
+        1324,
+        1237,
+        1385
+      ],
+      "type": "amount",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610210.229425,
+  "ocr_success": true,
+  "detected_count": 7
+}

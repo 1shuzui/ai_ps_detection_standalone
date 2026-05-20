@@ -1,0 +1,70 @@
+{
+  "image_path": "images\\p (21).jpg",
+  "width": 677,
+  "height": 640,
+  "key_regions": [
+    {
+      "text": "转给粱伟",
+      "confidence": 0.5434169769287109,
+      "bbox": [
+        298,
+        92,
+        380,
+        122
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "300",
+      "confidence": 0.7744009025382712,
+      "bbox": [
+        283,
+        121,
+        415,
+        165
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "300",
+      "confidence": 0.7744009025382712,
+      "bbox": [
+        283,
+        121,
+        415,
+        165
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "622",
+      "confidence": 0.5631430383529832,
+      "bbox": [
+        482,
+        220,
+        654,
+        244
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.6501621746484799,
+      "bbox": [
+        23,
+        459,
+        165,
+        479
+      ],
+      "type": "amount",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610030.650743,
+  "ocr_success": true,
+  "detected_count": 5
+}

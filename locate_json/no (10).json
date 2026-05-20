@@ -1,0 +1,262 @@
+{
+  "image_path": "images\\no (10).jpg",
+  "width": 1080,
+  "height": 2412,
+  "key_regions": [
+    {
+      "text": "36",
+      "confidence": 0.770385230056079,
+      "bbox": [
+        152,
+        143,
+        683,
+        229
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "36",
+      "confidence": 0.770385230056079,
+      "bbox": [
+        152,
+        143,
+        683,
+        229
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.7513448078735082,
+      "bbox": [
+        132,
+        490,
+        372,
+        516
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.7513448078735082,
+      "bbox": [
+        132,
+        490,
+        372,
+        516
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.7513448078735082,
+      "bbox": [
+        132,
+        490,
+        372,
+        516
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 14",
+      "confidence": 0.7513448078735082,
+      "bbox": [
+        132,
+        490,
+        372,
+        516
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 14",
+      "confidence": 0.7513448078735082,
+      "bbox": [
+        132,
+        490,
+        372,
+        516
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.11678300429917234,
+      "bbox": [
+        132,
+        519,
+        501,
+        548
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "[ang5891 李卫栊",
+      "confidence": 0.2671449857548676,
+      "bbox": [
+        622,
+        552,
+        712,
+        610
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "召**卫 趑溉勤",
+      "confidence": 0.08523425512096454,
+      "bbox": [
+        630,
+        614,
+        704,
+        670
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "271",
+      "confidence": 0.17258878684044007,
+      "bbox": [
+        276,
+        678,
+        422,
+        704
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "271",
+      "confidence": 0.17258878684044007,
+      "bbox": [
+        276,
+        678,
+        422,
+        704
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "271",
+      "confidence": 0.17258878684044007,
+      "bbox": [
+        276,
+        678,
+        422,
+        704
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.937091620747681,
+      "bbox": [
+        276,
+        740,
+        436,
+        764
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.937091620747681,
+      "bbox": [
+        276,
+        740,
+        436,
+        764
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 14",
+      "confidence": 0.937091620747681,
+      "bbox": [
+        276,
+        740,
+        436,
+        764
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 14",
+      "confidence": 0.937091620747681,
+      "bbox": [
+        276,
+        740,
+        436,
+        764
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9461926149642352,
+      "bbox": [
+        276,
+        772,
+        436,
+        796
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 14",
+      "confidence": 0.9461926149642352,
+      "bbox": [
+        276,
+        772,
+        436,
+        796
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "5.为保护用户隐私,^若导出凭证时选择不展示对方姓名,相关字段将以垦号 (*}替代显示。如需展示对方姓名。谮 说明: 工.本 《微信支付转账电子凭证》仅证明:  申谮人选择特定交易的相关信息。 3.本 $微信支付转账电子凭证》仅供参考;谮以微信支付账户记录为准。 4.为保护用户隐私且孝虑到微信号可能发生娈更; 本凭证显示的收付款方徽信号为用户申.凭证时经掩码处理后的 收付款方微信号。",
+      "confidence": 0.10408133495000393,
+      "bbox": [
+        120,
+        924,
+        950,
+        1110
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "在申谮时选择 \"展示对方姓名\" 并准确填写对方姓名。: 3#省",
+      "confidence": 0.06881371155861245,
+      "bbox": [
+        132,
+        1094,
+        965,
+        1201
+      ],
+      "type": "name",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609861.4941642,
+  "ocr_success": true,
+  "detected_count": 21
+}

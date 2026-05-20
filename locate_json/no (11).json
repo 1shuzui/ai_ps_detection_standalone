@@ -1,0 +1,226 @@
+{
+  "image_path": "images\\no (11).jpg",
+  "width": 1224,
+  "height": 2776,
+  "key_regions": [
+    {
+      "text": "202",
+      "confidence": 0.5551402139959438,
+      "bbox": [
+        3,
+        599,
+        365,
+        638
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.5551402139959438,
+      "bbox": [
+        3,
+        599,
+        365,
+        638
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 28",
+      "confidence": 0.5551402139959438,
+      "bbox": [
+        3,
+        599,
+        365,
+        638
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 28",
+      "confidence": 0.5551402139959438,
+      "bbox": [
+        3,
+        599,
+        365,
+        638
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.8706301776576599,
+      "bbox": [
+        3,
+        645,
+        560,
+        683
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "LZ617636585188 刘振国",
+      "confidence": 0.6156700790942731,
+      "bbox": [
+        704,
+        693,
+        909,
+        777
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "[*****90 李天宇",
+      "confidence": 0.5273399844693661,
+      "bbox": [
+        751,
+        784,
+        858,
+        872
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "600",
+      "confidence": 0.6486195896869725,
+      "bbox": [
+        222,
+        884,
+        438,
+        922
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "600",
+      "confidence": 0.6486195896869725,
+      "bbox": [
+        222,
+        884,
+        438,
+        922
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "600",
+      "confidence": 0.6486195896869725,
+      "bbox": [
+        222,
+        884,
+        438,
+        922
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9798665695256228,
+      "bbox": [
+        222,
+        975,
+        460,
+        1011
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9798665695256228,
+      "bbox": [
+        222,
+        975,
+        460,
+        1011
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 28",
+      "confidence": 0.9798665695256228,
+      "bbox": [
+        222,
+        975,
+        460,
+        1011
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 28",
+      "confidence": 0.9798665695256228,
+      "bbox": [
+        222,
+        975,
+        460,
+        1011
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9966166651328131,
+      "bbox": [
+        221,
+        1023,
+        459,
+        1056
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 28",
+      "confidence": 0.9966166651328131,
+      "bbox": [
+        221,
+        1023,
+        459,
+        1056
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "5.为保护用户隐私,若导出凭证时选择不展示对方姓名。相关字段将以星号 (*)替代显示。如需展示对方姓名。请",
+      "confidence": 0.39009026964808824,
+      "bbox": [
+        0,
+        1483,
+        1218,
+        1531
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "在申请时选择 \"展示对方姓名' 并准确填写对方姓名。",
+      "confidence": 0.7578169531721595,
+      "bbox": [
+        10,
+        1523,
+        599,
+        1566
+      ],
+      "type": "name",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609872.526021,
+  "ocr_success": true,
+  "detected_count": 18
+}

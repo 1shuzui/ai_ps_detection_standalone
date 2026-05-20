@@ -1,0 +1,58 @@
+{
+  "image_path": "images\\p (7).jpg",
+  "width": 661,
+  "height": 640,
+  "key_regions": [
+    {
+      "text": "转给 范玲玲",
+      "confidence": 0.06880883582747475,
+      "bbox": [
+        290,
+        114,
+        376,
+        140
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "31,000:00",
+      "confidence": 0.3410441434163842,
+      "bbox": [
+        249,
+        137,
+        415,
+        181
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.7535645389291142,
+      "bbox": [
+        488,
+        484,
+        642,
+        508
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 02 - 10",
+      "confidence": 0.7535645389291142,
+      "bbox": [
+        488,
+        484,
+        642,
+        508
+      ],
+      "type": "date",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610195.7051575,
+  "ocr_success": true,
+  "detected_count": 4
+}

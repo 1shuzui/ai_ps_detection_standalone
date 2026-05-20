@@ -1,0 +1,130 @@
+{
+  "image_path": "images\\no (12).jpg",
+  "width": 1080,
+  "height": 2400,
+  "key_regions": [
+    {
+      "text": "10,871:00",
+      "confidence": 0.9601636496625156,
+      "bbox": [
+        316,
+        556,
+        763,
+        668
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9588794156753618,
+      "bbox": [
+        330,
+        808,
+        690,
+        856
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9588794156753618,
+      "bbox": [
+        330,
+        808,
+        690,
+        856
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 27",
+      "confidence": 0.9588794156753618,
+      "bbox": [
+        330,
+        808,
+        690,
+        856
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 27",
+      "confidence": 0.9588794156753618,
+      "bbox": [
+        330,
+        808,
+        690,
+        856
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "731",
+      "confidence": 0.9150252894129698,
+      "bbox": [
+        330,
+        891,
+        721,
+        955
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "6",
+      "confidence": 0.8151749980655814,
+      "bbox": [
+        82,
+        1384,
+        660,
+        1440
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "6",
+      "confidence": 0.8151749980655814,
+      "bbox": [
+        82,
+        1384,
+        660,
+        1440
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "6",
+      "confidence": 0.8151749980655814,
+      "bbox": [
+        82,
+        1384,
+        660,
+        1440
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "6",
+      "confidence": 0.9839538627706883,
+      "bbox": [
+        331,
+        1503,
+        998,
+        1556
+      ],
+      "type": "amount",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609880.523195,
+  "ocr_success": true,
+  "detected_count": 10
+}

@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm list *)",
+      "Bash(ls /home/quyu/.claude/ 2>/dev/null)",
+      "Read(//home/quyu/.claude/**)",
+      "Bash(cc-switch --version)",
+      "Bash(cc-switch version *)",
+      "Bash(cc-switch --help)",
+      "Bash(pip show *)",
+      "Read(//usr/bin/**)",
+      "Bash(cc-switch status *)",
+      "Bash(whereis codex *)",
+      "Read(//home/quyu/.codex/**)",
+      "Bash(cc-switch -v)",
+      "Bash(ls /home/quyu/.claude/skills/ | sort > /tmp/claude_skills.txt && ls /home/quyu/.codex/skills/ | sort > /tmp/codex_skills.txt && diff /tmp/claude_skills.txt /tmp/codex_skills.txt)",
+      "Read(//tmp/**)",
+      "Bash(python3 -m json.tool)",
+      "Bash(cc-switch update *)",
+      "Bash(cc-switch upgrade *)",
+      "Bash(cc-switch self-update *)",
+      "Bash(pip install *)",
+      "Bash(pip3 install *)",
+      "Bash(npm install *)",
+      "Bash(find /home/quyu -maxdepth 3 -name \"cc-switch\" -o -name \"cc_switch\" 2>/dev/null | head -20)",
+      "Read(//home/quyu/**)"
+    ]
+  }
+}

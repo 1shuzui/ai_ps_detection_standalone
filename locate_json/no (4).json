@@ -1,0 +1,94 @@
+{
+  "image_path": "images\\no (4).jpg",
+  "width": 1080,
+  "height": 2340,
+  "key_regions": [
+    {
+      "text": "转给 李桂梅",
+      "confidence": 0.6215773057887937,
+      "bbox": [
+        400,
+        297,
+        678,
+        373
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "226",
+      "confidence": 0.2634633552267912,
+      "bbox": [
+        302,
+        377,
+        821,
+        492
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9428632986386564,
+      "bbox": [
+        622,
+        996,
+        1038,
+        1046
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9428632986386564,
+      "bbox": [
+        622,
+        996,
+        1038,
+        1046
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 17",
+      "confidence": 0.9428632986386564,
+      "bbox": [
+        622,
+        996,
+        1038,
+        1046
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 17",
+      "confidence": 0.9428632986386564,
+      "bbox": [
+        622,
+        996,
+        1038,
+        1046
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "621",
+      "confidence": 0.9241427949855103,
+      "bbox": [
+        764,
+        1100,
+        1038,
+        1152
+      ],
+      "type": "amount",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609911.4517474,
+  "ocr_success": true,
+  "detected_count": 7
+}

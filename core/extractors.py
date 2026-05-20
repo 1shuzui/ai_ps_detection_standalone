@@ -51,17 +51,15 @@ class FeatureExtractor:
 
     def extract_from_roi(self, roi_rgb):
         if roi_rgb is None or roi_rgb.size == 0:
-            return [], []
+            return [], [], []
 
         ocr_results = self.reader.readtext(roi_rgb)
 
         valid_stats = []
         tensor_list = []
+        feature_texts = []
 
-        # 记录哪些索引是真正需要提取字体特征的（纯数字/金额）
-        feature_indices = []
-
-        for idx, (bbox, text, conf) in enumerate(ocr_results):
+        for bbox, text, conf in ocr_results:
             xs = [p[0] for p in bbox]
             ys = [p[1] for p in bbox]
             x1, y1, x2, y2 = int(min(xs)), int(min(ys)), int(max(xs)), int(max(ys))
@@ -92,7 +90,7 @@ class FeatureExtractor:
                 if char_img.size > 0:
                     tensor = self.transform_local(char_img)
                     tensor_list.append(tensor)
-                    feature_indices.append(idx)
+                    feature_texts.append(text)
 
         # Batch 批量推理
         feats_list = []
@@ -104,7 +102,7 @@ class FeatureExtractor:
             batch_feats = batch_feats.view(batch_feats.size(0), -1).cpu().numpy()
             feats_list = [feat for feat in batch_feats]
 
-        return feats_list, valid_stats
+        return feats_list, valid_stats, feature_texts
 
 
 class TamperAnalyzer:

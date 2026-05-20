@@ -1,0 +1,106 @@
+{
+  "image_path": "images\\p (44).jpg",
+  "width": 1256,
+  "height": 2760,
+  "key_regions": [
+    {
+      "text": "847",
+      "confidence": 0.510747114568398,
+      "bbox": [
+        112,
+        1121,
+        1084,
+        1199
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "847",
+      "confidence": 0.510747114568398,
+      "bbox": [
+        112,
+        1121,
+        1084,
+        1199
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "660",
+      "confidence": 0.857410662872618,
+      "bbox": [
+        111,
+        1190,
+        564,
+        1265
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "660",
+      "confidence": 0.857410662872618,
+      "bbox": [
+        111,
+        1190,
+        564,
+        1265
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "10:25",
+      "confidence": 0.33828329783279004,
+      "bbox": [
+        110,
+        1969,
+        1127,
+        2047
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "10:25",
+      "confidence": 0.33828329783279004,
+      "bbox": [
+        110,
+        1969,
+        1127,
+        2047
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "660",
+      "confidence": 0.6213699532831378,
+      "bbox": [
+        111,
+        2040,
+        1076,
+        2128
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "660",
+      "confidence": 0.6213699532831378,
+      "bbox": [
+        111,
+        2040,
+        1076,
+        2128
+      ],
+      "type": "amount",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610188.019073,
+  "ocr_success": true,
+  "detected_count": 8
+}

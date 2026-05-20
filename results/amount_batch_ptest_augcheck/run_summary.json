@@ -1,0 +1,52 @@
+{
+  "total_images": 493,
+  "tampered": 410,
+  "suspicious": 0,
+  "normal": 79,
+  "unlocated": 4,
+  "needs_review": 466,
+  "by_group": {
+    "f": {
+      "total": 72,
+      "needs_review": 58,
+      "tampered": 24,
+      "suspicious": 0
+    },
+    "c": {
+      "total": 180,
+      "needs_review": 180,
+      "tampered": 175,
+      "suspicious": 0
+    },
+    "g": {
+      "total": 43,
+      "needs_review": 32,
+      "tampered": 27,
+      "suspicious": 0
+    },
+    "d": {
+      "total": 151,
+      "needs_review": 151,
+      "tampered": 150,
+      "suspicious": 0
+    },
+    "a": {
+      "total": 33,
+      "needs_review": 33,
+      "tampered": 33,
+      "suspicious": 0
+    },
+    "b": {
+      "total": 1,
+      "needs_review": 1,
+      "tampered": 1,
+      "suspicious": 0
+    },
+    "e": {
+      "total": 13,
+      "needs_review": 11,
+      "tampered": 0,
+      "suspicious": 0
+    }
+  }
+}

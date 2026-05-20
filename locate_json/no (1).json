@@ -1,0 +1,82 @@
+{
+  "image_path": "images\\no (1).jpg",
+  "width": 1080,
+  "height": 2400,
+  "key_regions": [
+    {
+      "text": "2",
+      "confidence": 0.61542281691264,
+      "bbox": [
+        53,
+        36,
+        169,
+        89
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "8,000:00",
+      "confidence": 0.9844582223518159,
+      "bbox": [
+        338,
+        553,
+        743,
+        670
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.6703513004285347,
+      "bbox": [
+        329,
+        805,
+        688,
+        856
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 13",
+      "confidence": 0.6703513004285347,
+      "bbox": [
+        329,
+        805,
+        688,
+        856
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "6",
+      "confidence": 0.87417212558808,
+      "bbox": [
+        81,
+        1383,
+        661,
+        1443
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "6",
+      "confidence": 0.87417212558808,
+      "bbox": [
+        81,
+        1383,
+        661,
+        1443
+      ],
+      "type": "amount",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609850.4926918,
+  "ocr_success": true,
+  "detected_count": 6
+}

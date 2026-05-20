@@ -1,0 +1,346 @@
+{
+  "total_images": 112,
+  "tampered": 88,
+  "suspicious": 0,
+  "normal": 24,
+  "unlocated": 0,
+  "needs_review": 101,
+  "by_group": {
+    "p (15)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (2)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (1)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (37)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (38)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (8)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (13)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (31)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (33)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (34)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (42)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (19)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (23)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (27)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (28)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (3)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (35)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (36)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (39)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (17)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (4)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (26)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (9)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (32)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (16)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (25)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (14)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (40)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (43)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (24)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (10)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (7)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (11)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (18)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (5)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (22)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (20)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (30)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (41)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (6)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (44)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (12)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (29)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "p (21)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 2,
+      "suspicious": 0
+    },
+    "no (5)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (12)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (8)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (2)": {
+      "total": 2,
+      "needs_review": 2,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (1)": {
+      "total": 2,
+      "needs_review": 1,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (4)": {
+      "total": 2,
+      "needs_review": 1,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (3)": {
+      "total": 2,
+      "needs_review": 1,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (10)": {
+      "total": 2,
+      "needs_review": 1,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (9)": {
+      "total": 2,
+      "needs_review": 1,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (6)": {
+      "total": 2,
+      "needs_review": 0,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (7)": {
+      "total": 2,
+      "needs_review": 0,
+      "tampered": 0,
+      "suspicious": 0
+    },
+    "no (11)": {
+      "total": 2,
+      "needs_review": 0,
+      "tampered": 0,
+      "suspicious": 0
+    }
+  }
+}

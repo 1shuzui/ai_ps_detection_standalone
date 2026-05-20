@@ -1,0 +1,169 @@
+libEGL warning: failed to get driver name for fd -1
+
+libEGL warning: MESA-LOADER: failed to retrieve device information
+
+libEGL warning: failed to get driver name for fd -1
+
+MESA: error: ZINK: failed to choose pdev
+libEGL warning: egl: failed to create dri2 screen
+[2026-05-20][19:45:36][INFO][cc_switch_lib::database::schema] 已插入 129 条默认模型定价数据
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ claude already has providers; live import skipped
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ codex already has providers; live import skipped
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ gemini already has providers; live import skipped
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No new OpenCode providers to import
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No new OpenClaw providers to import
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib::services::provider::live] Hermes provider 'aixj_vip' already exists in database, skipping
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No new Hermes providers to import
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No OMO config to import
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No OMO Slim config to import
+[2026-05-20][19:45:36][INFO][cc_switch_lib] Prompts table empty, importing from live configurations...
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No prompt file found for claude
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No prompt file found for codex
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No prompt file found for gemini
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No prompt file found for opencode
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No prompt file found for openclaw
+[2026-05-20][19:45:36][DEBUG][cc_switch_lib] ○ No prompt file found for hermes
+[2026-05-20][19:45:36][INFO][cc_switch_lib::app_store] app_config_dir 迁移功能已移除，请在设置中重新配置
+[2026-05-20][19:45:36][INFO][cc_switch_lib] === Registering deep-link URL handler ===
+[2026-05-20][19:45:36][INFO][cc_switch_lib] ⊘ Deep link handler already exists, skipping registration
+[2026-05-20][19:45:36][INFO][cc_switch_lib] ✓ Deep-link URL handler registered
+[2026-05-20][19:45:36][INFO][cc_switch_lib] 已加载日志配置: enabled=true, level=info
+[2026-05-20][19:45:36][INFO][cc_switch_lib] ✓ CopilotAuthManager initialized
+[2026-05-20][19:45:36][INFO][cc_switch_lib] ✓ CodexOAuthManager initialized
+[2026-05-20][19:45:36][INFO][cc_switch_lib::proxy::http_client] [GlobalProxy] Initialized: direct connection
+[2026-05-20][19:45:36][INFO][cc_switch_lib] 已禁用 WebKitGTK 硬件加速
+[2026-05-20][19:45:36][INFO][cc_switch_lib] 正常启动模式：主窗口已显示
+[2026-05-20][19:45:36][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 2 条, 跳过 0 条, 扫描 7 个文件
+
+(cc-switch:1492429): Gtk-CRITICAL **: 19:45:36.678: gtk_widget_get_scale_factor: assertion 'GTK_IS_WIDGET (widget)' failed
+
+(cc-switch:1492429): Gtk-CRITICAL **: 19:45:36.683: gtk_widget_get_scale_factor: assertion 'GTK_IS_WIDGET (widget)' failed
+[2026-05-20][19:45:36][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][19:45:37][INFO][cc_switch_lib::linux_fix] Linux nudge 尺寸 drift: expected=1052x749, got=1104x848，已补偿
+[2026-05-20][19:45:37][WARN][cc_switch_lib::linux_fix] Linux nudge 尺寸 drift 补偿后仍不一致: expected=1052x749, got=1104x848
+[2026-05-20][19:47:29][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][19:47:29][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.18"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 75, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.18")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][19:47:29][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][19:47:29][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][19:47:29][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][19:47:29][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][19:47:30][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][19:47:31][INFO][cc_switch_lib::linux_fix] Linux nudge 尺寸 drift: expected=1104x848, got=1156x947，已补偿
+[2026-05-20][19:47:31][WARN][cc_switch_lib::linux_fix] Linux nudge 尺寸 drift 补偿后仍不一致: expected=1104x848, got=1156x947
+[2026-05-20][19:47:40][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][19:48:41][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][19:49:56][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][19:49:56][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.22"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 71, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.22")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][19:49:56][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][19:49:56][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][19:49:56][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][19:49:56][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][19:49:56][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][19:49:57][INFO][cc_switch_lib::linux_fix] Linux nudge 尺寸 drift: expected=1156x947, got=1209x1046，已补偿
+[2026-05-20][19:49:57][WARN][cc_switch_lib::linux_fix] Linux nudge 尺寸 drift 补偿后仍不一致: expected=1156x947, got=1209x1046
+[2026-05-20][19:50:44][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][19:55:53][INFO][cc_switch_lib::services::session_usage_codex] [CODEX-SYNC] 同步完成: 导入 2 条, 跳过 0 条, ��描 77 个文件
+[2026-05-20][19:56:54][INFO][cc_switch_lib::services::session_usage_codex] [CODEX-SYNC] 同步完成: 导入 3 条, 跳过 0 条, ��描 77 个文件
+[2026-05-20][19:57:55][INFO][cc_switch_lib::services::session_usage_codex] [CODEX-SYNC] 同步完成: 导入 4 条, 跳过 0 条, ��描 77 个文件
+[2026-05-20][19:58:56][INFO][cc_switch_lib::services::session_usage_codex] [CODEX-SYNC] 同步完成: 导入 6 条, 跳过 0 条, ��描 77 个文件
+[2026-05-20][19:59:58][INFO][cc_switch_lib::services::session_usage_codex] [CODEX-SYNC] 同步完成: 导入 6 条, 跳过 0 条, ��描 77 个文件
+[2026-05-20][20:00:58][INFO][cc_switch_lib::services::session_usage_codex] [CODEX-SYNC] 同步完成: 导入 1 条, 跳过 0 条, ��描 77 个文件
+[2026-05-20][20:03:21][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][20:03:21][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.26"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 71, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.26")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][20:03:21][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][20:03:21][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][20:03:21][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][20:03:21][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][20:03:21][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][20:03:44][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][20:03:44][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.30"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 71, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.30")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][20:03:44][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][20:03:44][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][20:03:44][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][20:03:44][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][20:03:44][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][20:03:44][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.34"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 67, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.34")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][20:03:44][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][20:03:44][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][20:03:44][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][20:03:44][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][20:03:44][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][20:03:44][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.38"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 75, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.38")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][20:03:44][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][20:03:44][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][20:03:44][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][20:03:44][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][20:03:45][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][20:03:45][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][20:03:45][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][20:04:02][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 3 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:04:02][INFO][cc_switch_lib::services::session_usage_codex] [CODEX-SYNC] 同步完成: 导入 7 条, 跳过 0 条, ��描 77 个文件
+[2026-05-20][20:04:09][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][20:04:09][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.42"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 71, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.42")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][20:04:09][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][20:04:09][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][20:04:09][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][20:04:09][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][20:04:09][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][20:04:09][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.46"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 71, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.46")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][20:04:09][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][20:04:09][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][20:04:09][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][20:04:09][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][20:04:09][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][20:04:09][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.50"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 75, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.50")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][20:04:09][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][20:04:09][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][20:04:09][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][20:04:09][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][20:04:09][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][20:04:09][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][20:04:09][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][20:05:04][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 3 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:05:04][INFO][cc_switch_lib::services::session_usage_codex] [CODEX-SYNC] 同步完成: 导入 5 条, 跳过 0 条, ��描 77 个文件
+[2026-05-20][20:06:05][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:06:05][INFO][cc_switch_lib::services::session_usage_codex] [CODEX-SYNC] 同步完成: 导入 2 条, 跳过 0 条, ��描 77 个文件
+[2026-05-20][20:06:22][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][20:06:22][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.54"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 71, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.54")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][20:06:22][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][20:06:22][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][20:06:22][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][20:06:22][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][20:06:22][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][20:07:07][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 2 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:07:07][INFO][cc_switch_lib::services::session_usage_codex] [CODEX-SYNC] 同步完成: 导入 6 条, 跳过 0 条, ��描 77 个文件
+[2026-05-20][20:10:11][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:14:18][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 2 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:15:20][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 3 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:16:22][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:17:24][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:18:26][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:34:59][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:40:09][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:41:11][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 4 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:43:15][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:45:18][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:46:20][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 4 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:47:22][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 2 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:48:24][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+
+(cc-switch:1492429): Gtk-CRITICAL **: 20:51:38.768: gtk_widget_get_scale_factor: assertion 'GTK_IS_WIDGET (widget)' failed
+[2026-05-20][20:52:11][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][20:52:11][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.58"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 59, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.58")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][20:52:11][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][20:52:11][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][20:52:11][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][20:52:11][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][20:52:11][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][20:52:11][INFO][cc_switch_lib::linux_fix] Linux nudge 尺寸 drift: expected=1261x1145, got=1313x1244，已补偿
+[2026-05-20][20:52:11][WARN][cc_switch_lib::linux_fix] Linux nudge 尺寸 drift 补偿后仍不一致: expected=1261x1145, got=1313x1244
+[2026-05-20][20:57:38][INFO][cc_switch_lib::services::session_usage] [SESSION-SYNC] 同步完成: 导入 1 条, 跳过 0 条, 扫描 7 个文件
+[2026-05-20][20:57:55][TRACE][tracing::span::active] -> obj_server_task;
+[2026-05-20][20:57:55][INFO][zbus::object_server] dispatch_call; msg=Msg { type: MethodCall, serial: 6, sender: UniqueName(":1.62"), path: ObjectPath("/com/ccswitch/desktop/SingleInstance"), iface: InterfaceName("org.SingleInstance.DBus"), member: MemberName("ExecuteCallback"), body: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), fds: [] } hdr=Header { primary: PrimaryHeader { endian_sig: Little, msg_type: MethodCall, flags: BitFlags<Flags>(0b0), protocol_version: 1, body_len: 83, serial_num: 6 }, fields: Fields { path: Some(ObjectPath("/com/ccswitch/desktop/SingleInstance")), interface: Some(InterfaceName("org.SingleInstance.DBus")), member: Some(MemberName("ExecuteCallback")), error_name: None, reply_serial: None, destination: Some(BusName::WellKnown("com.ccswitch.desktop.SingleInstance")), sender: Some(UniqueName(":1.62")), signature: Structure(Dynamic { fields: [Array(Dynamic { child: Str }), Str] }), unix_fds: None } }
+[2026-05-20][20:57:55][TRACE][tracing::span] -- dispatch_call;
+[2026-05-20][20:57:55][TRACE][tracing::span::active] <- obj_server_task;
+[2026-05-20][20:57:55][INFO][cc_switch_lib] === Single Instance Callback Triggered ===
+[2026-05-20][20:57:55][INFO][cc_switch_lib] ℹ No deep link URL found in args (this is expected on macOS when launched via system)
+[2026-05-20][20:57:56][INFO][cc_switch_lib::linux_fix] Linux: 已对主窗口执行 focus + surface 重激活
+[2026-05-20][20:57:56][INFO][cc_switch_lib::linux_fix] Linux nudge 尺寸 drift: expected=1313x1244, got=1365x1343，已补偿
+[2026-05-20][20:57:56][WARN][cc_switch_lib::linux_fix] Linux nudge 尺寸 drift 补偿后仍不一致: expected=1313x1244, got=1365x1343

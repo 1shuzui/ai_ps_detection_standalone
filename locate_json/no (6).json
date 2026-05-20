@@ -1,0 +1,226 @@
+{
+  "image_path": "images\\no (6).jpg",
+  "width": 1280,
+  "height": 2781,
+  "key_regions": [
+    {
+      "text": "202",
+      "confidence": 0.51314358293731,
+      "bbox": [
+        156,
+        756,
+        440,
+        788
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.51314358293731,
+      "bbox": [
+        156,
+        756,
+        440,
+        788
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 31",
+      "confidence": 0.51314358293731,
+      "bbox": [
+        156,
+        756,
+        440,
+        788
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 31",
+      "confidence": 0.51314358293731,
+      "bbox": [
+        156,
+        756,
+        440,
+        788
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.35647040989625234,
+      "bbox": [
+        156,
+        791,
+        592,
+        823
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "Jiayibbao 李玲玉",
+      "confidence": 0.6634212556240783,
+      "bbox": [
+        740,
+        828,
+        837,
+        899
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "[*****32 吕兵兵",
+      "confidence": 0.45959574716127094,
+      "bbox": [
+        747,
+        906,
+        827,
+        973
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "122",
+      "confidence": 0.811453072030354,
+      "bbox": [
+        326,
+        978,
+        497,
+        1010
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "122",
+      "confidence": 0.811453072030354,
+      "bbox": [
+        326,
+        978,
+        497,
+        1010
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "122",
+      "confidence": 0.811453072030354,
+      "bbox": [
+        326,
+        978,
+        497,
+        1010
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9764360067643535,
+      "bbox": [
+        328,
+        1051,
+        514,
+        1079
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9764360067643535,
+      "bbox": [
+        328,
+        1051,
+        514,
+        1079
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 31",
+      "confidence": 0.9764360067643535,
+      "bbox": [
+        328,
+        1051,
+        514,
+        1079
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 31",
+      "confidence": 0.9764360067643535,
+      "bbox": [
+        328,
+        1051,
+        514,
+        1079
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9971925632390116,
+      "bbox": [
+        326,
+        1090,
+        514,
+        1116
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 31",
+      "confidence": 0.9971925632390116,
+      "bbox": [
+        326,
+        1090,
+        514,
+        1116
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "5.为保护用户隐私。 若导出凭证时选择不展示对方姓名,相关字段将以昱号 (*)替代显示。如需展示对方姓名,请",
+      "confidence": 0.24499158254498837,
+      "bbox": [
+        144,
+        1454,
+        1115,
+        1491
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "在申请时选择 \"展示对方姓名\"  并准确填写对方姓名。",
+      "confidence": 0.5395347709370323,
+      "bbox": [
+        159,
+        1485,
+        626,
+        1521
+      ],
+      "type": "name",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609931.5126143,
+  "ocr_success": true,
+  "detected_count": 18
+}

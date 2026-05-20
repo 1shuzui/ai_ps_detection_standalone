@@ -1,0 +1,70 @@
+{
+  "image_path": "images\\p (41).jpg",
+  "width": 657,
+  "height": 640,
+  "key_regions": [
+    {
+      "text": "转给 胨宗总",
+      "confidence": 0.011298280075777701,
+      "bbox": [
+        288,
+        114,
+        374,
+        138
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "18,000:00",
+      "confidence": 0.4944921718682064,
+      "bbox": [
+        251,
+        137,
+        413,
+        179
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "622",
+      "confidence": 0.2538408496663461,
+      "bbox": [
+        508,
+        428,
+        638,
+        454
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.6917005625206528,
+      "bbox": [
+        486,
+        482,
+        640,
+        506
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 02 - 10",
+      "confidence": 0.6917005625206528,
+      "bbox": [
+        486,
+        482,
+        640,
+        506
+      ],
+      "type": "date",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610171.386983,
+  "ocr_success": true,
+  "detected_count": 5
+}

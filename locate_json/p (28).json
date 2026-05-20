@@ -1,0 +1,82 @@
+{
+  "image_path": "images\\p (28).jpg",
+  "width": 864,
+  "height": 1920,
+  "key_regions": [
+    {
+      "text": "197",
+      "confidence": 0.6017545780622859,
+      "bbox": [
+        294,
+        405,
+        568,
+        467
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "徐振光",
+      "confidence": 0.9866333127753121,
+      "bbox": [
+        666,
+        752,
+        774,
+        800
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "197",
+      "confidence": 0.9994216321009696,
+      "bbox": [
+        630,
+        937,
+        772,
+        977
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "197",
+      "confidence": 0.9994216321009696,
+      "bbox": [
+        630,
+        937,
+        772,
+        977
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9788047631454471,
+      "bbox": [
+        475,
+        997,
+        773,
+        1037
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 02 - 04",
+      "confidence": 0.9788047631454471,
+      "bbox": [
+        475,
+        997,
+        773,
+        1037
+      ],
+      "type": "date",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610079.7931914,
+  "ocr_success": true,
+  "detected_count": 6
+}

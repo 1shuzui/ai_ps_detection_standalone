@@ -1,0 +1,70 @@
+{
+  "image_path": "images\\p (10).jpg",
+  "width": 668,
+  "height": 640,
+  "key_regions": [
+    {
+      "text": "转给伏盛军",
+      "confidence": 0.40712586209348806,
+      "bbox": [
+        290,
+        116,
+        378,
+        142
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "37,000:00",
+      "confidence": 0.4872842196356896,
+      "bbox": [
+        249,
+        139,
+        415,
+        181
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "622",
+      "confidence": 0.368257705965511,
+      "bbox": [
+        511,
+        436,
+        645,
+        460
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.7449396973023472,
+      "bbox": [
+        490,
+        488,
+        644,
+        512
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 28",
+      "confidence": 0.7449396973023472,
+      "bbox": [
+        490,
+        488,
+        644,
+        512
+      ],
+      "type": "date",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609965.371542,
+  "ocr_success": true,
+  "detected_count": 5
+}

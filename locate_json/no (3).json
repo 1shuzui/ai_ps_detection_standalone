@@ -1,0 +1,214 @@
+{
+  "image_path": "images\\no (3).jpg",
+  "width": 1216,
+  "height": 2688,
+  "key_regions": [
+    {
+      "text": "202",
+      "confidence": 0.14929731111196964,
+      "bbox": [
+        149,
+        680,
+        417,
+        711
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.14929731111196964,
+      "bbox": [
+        149,
+        680,
+        417,
+        711
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.8263013813612131,
+      "bbox": [
+        147,
+        716,
+        564,
+        747
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "120",
+      "confidence": 0.8290270458825579,
+      "bbox": [
+        308,
+        894,
+        476,
+        926
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "120",
+      "confidence": 0.8290270458825579,
+      "bbox": [
+        308,
+        894,
+        476,
+        926
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "120",
+      "confidence": 0.8290270458825579,
+      "bbox": [
+        308,
+        894,
+        476,
+        926
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9544350453249791,
+      "bbox": [
+        310,
+        961,
+        489,
+        989
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9544350453249791,
+      "bbox": [
+        310,
+        961,
+        489,
+        989
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 22",
+      "confidence": 0.9544350453249791,
+      "bbox": [
+        310,
+        961,
+        489,
+        989
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 22",
+      "confidence": 0.9544350453249791,
+      "bbox": [
+        310,
+        961,
+        489,
+        989
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.7111754073783165,
+      "bbox": [
+        310,
+        997,
+        491,
+        1026
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.7111754073783165,
+      "bbox": [
+        310,
+        997,
+        491,
+        1026
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "14:17:43",
+      "confidence": 0.7111754073783165,
+      "bbox": [
+        310,
+        997,
+        491,
+        1026
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "14:17:43",
+      "confidence": 0.7111754073783165,
+      "bbox": [
+        310,
+        997,
+        491,
+        1026
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "1",
+      "confidence": 2.3755303118377924e-05,
+      "bbox": [
+        308,
+        1031,
+        396,
+        1062
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "5.为保护用户隐私,若导出凭证时选择不展示对方姓名,相关字段将以星号 (*) 替代显示。如需展示对方姓名,谙",
+      "confidence": 0.19345012766104044,
+      "bbox": [
+        138,
+        1346,
+        1060,
+        1379
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "在申请时选择 *展示对方姓名\"  井准确填写对方姓]",
+      "confidence": 0.06025581712443459,
+      "bbox": [
+        153,
+        1375,
+        596,
+        1406
+      ],
+      "type": "name",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609903.9890633,
+  "ocr_success": true,
+  "detected_count": 17
+}

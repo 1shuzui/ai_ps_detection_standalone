@@ -1,0 +1,226 @@
+{
+  "image_path": "images\\no (2).jpg",
+  "width": 1260,
+  "height": 2800,
+  "key_regions": [
+    {
+      "text": "6",
+      "confidence": 0.5219383153932347,
+      "bbox": [
+        175,
+        201,
+        596,
+        281
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.38685610584879493,
+      "bbox": [
+        155,
+        608,
+        435,
+        638
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.38685610584879493,
+      "bbox": [
+        155,
+        608,
+        435,
+        638
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 26",
+      "confidence": 0.38685610584879493,
+      "bbox": [
+        155,
+        608,
+        435,
+        638
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 26",
+      "confidence": 0.38685610584879493,
+      "bbox": [
+        155,
+        608,
+        435,
+        638
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.4294177066059392,
+      "bbox": [
+        153,
+        643,
+        586,
+        675
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "138",
+      "confidence": 0.20344403239728118,
+      "bbox": [
+        715,
+        682,
+        842,
+        708
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "138",
+      "confidence": 0.20344403239728118,
+      "bbox": [
+        715,
+        682,
+        842,
+        708
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "135",
+      "confidence": 0.7127846753456887,
+      "bbox": [
+        323,
+        829,
+        492,
+        859
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "135",
+      "confidence": 0.7127846753456887,
+      "bbox": [
+        323,
+        829,
+        492,
+        859
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "135",
+      "confidence": 0.7127846753456887,
+      "bbox": [
+        323,
+        829,
+        492,
+        859
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.8630325852582773,
+      "bbox": [
+        323,
+        899,
+        507,
+        925
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.8630325852582773,
+      "bbox": [
+        323,
+        899,
+        507,
+        925
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 26",
+      "confidence": 0.8630325852582773,
+      "bbox": [
+        323,
+        899,
+        507,
+        925
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 26",
+      "confidence": 0.8630325852582773,
+      "bbox": [
+        323,
+        899,
+        507,
+        925
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.6265098227413108,
+      "bbox": [
+        323,
+        936,
+        507,
+        964
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 26",
+      "confidence": 0.6265098227413108,
+      "bbox": [
+        323,
+        936,
+        507,
+        964
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "5.为保护用户隐私,若导出凭证时选择不展示对方姓名,相关字段将以星号 (*)替代显示。如需展示对方姓名;请 在申请时选择 c展示对方姓名\"  并准确填写对方姓名。 孑付科d夯",
+      "confidence": 0.15683767710675992,
+      "bbox": [
+        139,
+        1296,
+        1101,
+        1413
+      ],
+      "type": "name",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609891.9775593,
+  "ocr_success": true,
+  "detected_count": 18
+}

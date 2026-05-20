@@ -18,6 +18,7 @@ from abc import ABC, abstractmethod
 from contextlib import asynccontextmanager
 from datetime import datetime, timedelta
 from enum import Enum
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import cv2
@@ -31,6 +32,8 @@ from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 from PIL import Image, ImageDraw, ImageFont
 
+from batch_eval_amounts import build_amount_candidates, detect_certificate_document_override, tokenize_ocr_results
+from core.utils import load_chinese_font
 from inference_api import InferenceEngineAPI
 
 # ==========================================
@@ -254,6 +257,30 @@ class DetectionDomainServiceV3:
         self.ocr_reader = ocr_reader
         self.semaphore = semaphore
 
+    @staticmethod
+    def _bbox_iou(a: BBoxDTO, b: BBoxDTO) -> float:
+        inter_x1 = max(a.x1, b.x1)
+        inter_y1 = max(a.y1, b.y1)
+        inter_x2 = min(a.x2, b.x2)
+        inter_y2 = min(a.y2, b.y2)
+        inter_w = max(0, inter_x2 - inter_x1)
+        inter_h = max(0, inter_y2 - inter_y1)
+        inter_area = inter_w * inter_h
+        if inter_area == 0:
+            return 0.0
+        area_a = (a.x2 - a.x1) * (a.y2 - a.y1)
+        area_b = (b.x2 - b.x1) * (b.y2 - b.y1)
+        union_area = max(area_a + area_b - inter_area, 1)
+        return inter_area / union_area
+
+    def _deduplicate_bboxes(self, bboxes: List[BBoxDTO], iou_threshold: float = 0.85) -> List[BBoxDTO]:
+        deduped: List[BBoxDTO] = []
+        for bbox in sorted(bboxes, key=lambda b: ((b.x2 - b.x1) * (b.y2 - b.y1)), reverse=True):
+            if any(self._bbox_iou(bbox, kept) >= iou_threshold for kept in deduped):
+                continue
+            deduped.append(bbox)
+        return deduped
+
     def _easyocr_auto_detect(self, image_path: str) -> List[BBoxDTO]:
         logger.info(f"Running EasyOCR multi-bbox detection for {image_path}")
         img_cv2 = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
@@ -263,24 +290,43 @@ class DetectionDomainServiceV3:
         blurred = cv2.medianBlur(gray, 3) 
         
         ocr_results = self.ocr_reader.readtext(blurred, adjust_contrast=0.5, mag_ratio=2.0, text_threshold=0.25)
-
-        bboxes = []
-        for bbox, text, conf in ocr_results:
-            text_clean = text.replace(" ", "")
-            total_len = len(text_clean)
-            if total_len == 0: continue
-
-            digits_count = len(re.findall(r'\d', text_clean))
-            digit_ratio = digits_count / total_len
-
-            if digits_count < 3 or (total_len > 18 and digit_ratio < 0.5):
-                continue
-
-            xs = [p[0] for p in bbox]
-            ys = [p[1] for p in bbox]
-            bboxes.append(BBoxDTO(x1=int(min(xs)), y1=int(min(ys)), x2=int(max(xs)), y2=int(max(ys))))
+        tokens = tokenize_ocr_results(ocr_results)
+        candidates = build_amount_candidates(tokens, img_cv2.shape)
+        bboxes = [
+            BBoxDTO(x1=int(candidate.bbox[0]), y1=int(candidate.bbox[1]), x2=int(candidate.bbox[2]), y2=int(candidate.bbox[3]))
+            for candidate in candidates
+        ]
         
-        return bboxes
+        return self._deduplicate_bboxes(bboxes)
+
+    def _document_rule_override(self, image_path: str) -> Optional[Dict[str, Any]]:
+        img_cv2 = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
+        if img_cv2 is None:
+            return None
+
+        gray = cv2.cvtColor(img_cv2, cv2.COLOR_BGR2GRAY)
+        blurred = cv2.medianBlur(gray, 3)
+        ocr_results = self.ocr_reader.readtext(blurred, adjust_contrast=0.5, mag_ratio=2.0, text_threshold=0.25)
+        tokens = tokenize_ocr_results(ocr_results)
+        candidates = build_amount_candidates(tokens, img_cv2.shape)
+        override = detect_certificate_document_override(
+            image_path=Path(image_path),
+            image=img_cv2,
+            tokens=tokens,
+            candidates=candidates,
+            ocr_reader=self.ocr_reader,
+        )
+        if not override:
+            return None
+
+        bbox = [int(value) for value in override["bbox"].split(",")]
+        return {
+            "result": override["status"],
+            "confidence": float(override["confidence"]),
+            "reason": override["reason"],
+            "bbox": bbox,
+            "original_bbox": bbox,
+        }
 
     async def execute_async(self, task_id: str, image_path: str, bbox: Optional[BBoxDTO] = None) -> None:
         task = await self.registry.get_task(task_id)
@@ -294,7 +340,7 @@ class DetectionDomainServiceV3:
                 
                 # 引入并发锁保护单次推理
                 async with self.semaphore:
-                    res_str = await run_in_threadpool(self.engine.predict, image_path, bbox_list)
+                    res_str = await run_in_threadpool(self.engine.predict, image_path, bbox_list, "xyxy")
                     
                 res_dict = json.loads(res_str)
                 if res_dict.get("result") == "错误": raise ValueError(res_dict.get("reason"))
@@ -308,8 +354,19 @@ class DetectionDomainServiceV3:
                     bboxes = await run_in_threadpool(self._easyocr_auto_detect, image_path)
                     
                 if not bboxes:
-                    empty_res = {"result": "正常", "confidence": 0.0, "reason": "未发现关键数值或单号区域"}
-                    await self.registry.update_task(task_id, status=TaskStatusEnum.COMPLETED, result=empty_res)
+                    async with self.semaphore:
+                        document_override = await run_in_threadpool(self._document_rule_override, image_path)
+
+                    if document_override:
+                        await self.registry.update_task(
+                            task_id,
+                            status=TaskStatusEnum.COMPLETED,
+                            result=document_override,
+                            multi_results=[document_override],
+                        )
+                    else:
+                        empty_res = {"result": "正常", "confidence": 0.0, "reason": "未发现关键数值或单号区域"}
+                        await self.registry.update_task(task_id, status=TaskStatusEnum.COMPLETED, result=empty_res)
                     return
 
                 all_results = []
@@ -318,7 +375,7 @@ class DetectionDomainServiceV3:
                         b_list = [b.x1, b.y1, b.x2, b.y2]
                         # 对循环切片推理施加严格的并发控制，多请求排队等待
                         async with self.semaphore:
-                            res_str = await run_in_threadpool(self.engine.predict, image_path, b_list)
+                            res_str = await run_in_threadpool(self.engine.predict, image_path, b_list, "xyxy")
                             
                         res_dict = json.loads(res_str)
                         if res_dict.get("result") != "错误":
@@ -326,6 +383,11 @@ class DetectionDomainServiceV3:
                             all_results.append(res_dict)
                     except Exception as e:
                         logger.warning(f"Task {task_id}: Single bbox {b} prediction failed: {e}")
+
+                async with self.semaphore:
+                    document_override = await run_in_threadpool(self._document_rule_override, image_path)
+                if document_override and not any(item.get("result") == "篡改" for item in all_results):
+                    all_results.append(document_override)
                 
                 await self.registry.update_task(task_id, status=TaskStatusEnum.COMPLETED, multi_results=all_results)
 
@@ -345,11 +407,7 @@ class DetectionDomainServiceV3:
             img_cv2 = cv2.imdecode(np.fromfile(task.image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
             img_pil = Image.fromarray(cv2.cvtColor(img_cv2, cv2.COLOR_BGR2RGB))
             draw = ImageDraw.Draw(img_pil)
-            try:
-                font = ImageFont.truetype("simhei.ttf", 22)
-            except IOError:
-                logger.warning("simhei.ttf not found. Using default font.")
-                font = ImageFont.load_default()
+            font = load_chinese_font(22)
 
             results_to_draw = task.multi_results if task.multi_results else []
             if task.result and not task.multi_results:

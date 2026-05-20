@@ -1,0 +1,82 @@
+{
+  "image_path": "images\\p (36).jpg",
+  "width": 864,
+  "height": 1920,
+  "key_regions": [
+    {
+      "text": "319",
+      "confidence": 0.4044082903869149,
+      "bbox": [
+        295,
+        405,
+        567,
+        467
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "刘晓华",
+      "confidence": 0.9659645607029226,
+      "bbox": [
+        666,
+        752,
+        774,
+        800
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "319",
+      "confidence": 0.6613920738808636,
+      "bbox": [
+        631,
+        939,
+        773,
+        977
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "319",
+      "confidence": 0.6613920738808636,
+      "bbox": [
+        631,
+        939,
+        773,
+        977
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9171679606442353,
+      "bbox": [
+        475,
+        997,
+        773,
+        1037
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2025 - 12 - 11",
+      "confidence": 0.9171679606442353,
+      "bbox": [
+        475,
+        997,
+        773,
+        1037
+      ],
+      "type": "date",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610135.9949348,
+  "ocr_success": true,
+  "detected_count": 6
+}

@@ -1,0 +1,22 @@
+{
+  "total_images": 2,
+  "tampered": 1,
+  "suspicious": 0,
+  "normal": 1,
+  "unlocated": 0,
+  "needs_review": 2,
+  "by_group": {
+    "111": {
+      "total": 1,
+      "needs_review": 1,
+      "tampered": 1,
+      "suspicious": 0
+    },
+    "92e595cffb63d039f10b271f23b180dd": {
+      "total": 1,
+      "needs_review": 1,
+      "tampered": 0,
+      "suspicious": 0
+    }
+  }
+}

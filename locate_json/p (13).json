@@ -1,0 +1,166 @@
+{
+  "image_path": "images\\p (13).jpg",
+  "width": 1280,
+  "height": 2832,
+  "key_regions": [
+    {
+      "text": "99,999",
+      "confidence": 0.4703268168078178,
+      "bbox": [
+        330,
+        476,
+        950,
+        626
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "99,999",
+      "confidence": 0.4703268168078178,
+      "bbox": [
+        330,
+        476,
+        950,
+        626
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "87,387:65",
+      "confidence": 0.956364655098501,
+      "bbox": [
+        451,
+        617,
+        825,
+        698
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9155818994161987,
+      "bbox": [
+        780,
+        818,
+        1239,
+        883
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.9155818994161987,
+      "bbox": [
+        780,
+        818,
+        1239,
+        883
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 01",
+      "confidence": 0.9155818994161987,
+      "bbox": [
+        780,
+        818,
+        1239,
+        883
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 01",
+      "confidence": 0.9155818994161987,
+      "bbox": [
+        780,
+        818,
+        1239,
+        883
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "621",
+      "confidence": 0.29908815395132954,
+      "bbox": [
+        891,
+        948,
+        1237,
+        1013
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "99,999:00",
+      "confidence": 0.9893824054076433,
+      "bbox": [
+        982,
+        1465,
+        1239,
+        1540
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "99,999:00",
+      "confidence": 0.9893824054076433,
+      "bbox": [
+        982,
+        1465,
+        1239,
+        1540
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "99,999:00",
+      "confidence": 0.9992288453626332,
+      "bbox": [
+        983,
+        1599,
+        1239,
+        1668
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "87,387:65",
+      "confidence": 0.9956689710186812,
+      "bbox": [
+        982,
+        1851,
+        1240,
+        1931
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "对方户名 *勤",
+      "confidence": 0.7293950334475776,
+      "bbox": [
+        36,
+        2159,
+        1233,
+        2246
+      ],
+      "type": "name",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772609986.4822435,
+  "ocr_success": true,
+  "detected_count": 13
+}

@@ -1,0 +1,106 @@
+{
+  "image_path": "images\\p (38).jpg",
+  "width": 864,
+  "height": 1920,
+  "key_regions": [
+    {
+      "text": "467",
+      "confidence": 0.48459666980376936,
+      "bbox": [
+        295,
+        405,
+        569,
+        467
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "刘勇",
+      "confidence": 0.6011075678539646,
+      "bbox": [
+        697,
+        755,
+        769,
+        799
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "467",
+      "confidence": 0.9189022401842148,
+      "bbox": [
+        633,
+        939,
+        773,
+        977
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "467",
+      "confidence": 0.9189022401842148,
+      "bbox": [
+        633,
+        939,
+        773,
+        977
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.5814427758378636,
+      "bbox": [
+        477,
+        997,
+        773,
+        1037
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.5814427758378636,
+      "bbox": [
+        477,
+        997,
+        773,
+        1037
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2025 - 11 - 21",
+      "confidence": 0.5814427758378636,
+      "bbox": [
+        477,
+        997,
+        773,
+        1037
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2025 - 11 - 21",
+      "confidence": 0.5814427758378636,
+      "bbox": [
+        477,
+        997,
+        773,
+        1037
+      ],
+      "type": "date",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610147.3994083,
+  "ocr_success": true,
+  "detected_count": 8
+}

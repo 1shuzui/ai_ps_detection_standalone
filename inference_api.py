@@ -6,7 +6,7 @@ import logging
 import os
 import joblib
 import re
-from typing import List
+from typing import Dict, List, Tuple
 
 from core.extractors import FeatureExtractor, FontFeatureLibrary, TamperAnalyzer
 from core.detectors import PixelLevelDetector
@@ -35,7 +35,60 @@ class InferenceEngineAPI:
         self.global_model = joblib.load(xgb_path)
         self.pixel_detector = PixelLevelDetector()
 
-    def predict(self, full_image_path: str, roi_bbox: List[int]) -> str:
+    @staticmethod
+    def _clip_bbox_xyxy(bbox_xyxy: List[int], img_w: int, img_h: int) -> Tuple[int, int, int, int]:
+        x1, y1, x2, y2 = [int(v) for v in bbox_xyxy]
+        x1 = max(0, min(x1, img_w - 1))
+        y1 = max(0, min(y1, img_h - 1))
+        x2 = max(x1 + 1, min(x2, img_w))
+        y2 = max(y1 + 1, min(y2, img_h))
+        return x1, y1, x2, y2
+
+    def _normalize_roi_bbox(self, roi_bbox: List[int], img_w: int, img_h: int, bbox_format: str) -> Tuple[int, int, int, int]:
+        if len(roi_bbox) != 4:
+            raise ValueError("ROI bbox must contain exactly four integers.")
+
+        x1, y1, third, fourth = [int(v) for v in roi_bbox]
+        format_name = (bbox_format or "auto").lower()
+
+        if format_name == "xyxy":
+            return self._clip_bbox_xyxy([x1, y1, third, fourth], img_w, img_h)
+
+        if format_name == "xywh":
+            return self._clip_bbox_xyxy([x1, y1, x1 + third, y1 + fourth], img_w, img_h)
+
+        # 兼容旧接口：保留宽高格式兜底，同时让 OCR / JSON 产出的 xyxy 优先走正确分支。
+        looks_like_xyxy = third > x1 and fourth > y1 and third <= img_w and fourth <= img_h
+        if looks_like_xyxy:
+            return self._clip_bbox_xyxy([x1, y1, third, fourth], img_w, img_h)
+
+        return self._clip_bbox_xyxy([x1, y1, x1 + third, y1 + fourth], img_w, img_h)
+
+    @staticmethod
+    def _profile_numeric_text(extracted_text: str, max_len: int) -> Dict[str, float]:
+        text_clean = extracted_text.replace(" ", "")
+        total_len = len(text_clean)
+        digit_count = len(re.findall(r"\d", text_clean))
+        digit_ratio = (digit_count / total_len) if total_len else 0.0
+
+        amount_pattern = re.search(r"\d[\d,]*[.:]\d{1,2}", text_clean)
+        currency_hint = re.search(r"(小写|金额|元|¥|￥|人民币)", text_clean)
+        order_hint = re.search(r"(单号|订单|流水|凭证|参考号)", text_clean)
+
+        is_core_candidate = digit_count >= 3 and (
+            digit_ratio >= 0.35 or amount_pattern is not None or currency_hint is not None or order_hint is not None
+        )
+        should_use_font_signal = is_core_candidate or (digit_count >= 3 and total_len <= max_len * 2)
+
+        return {
+            "digit_count": digit_count,
+            "digit_ratio": digit_ratio,
+            "total_len": total_len,
+            "is_core_candidate": float(is_core_candidate),
+            "should_use_font_signal": float(should_use_font_signal),
+        }
+
+    def predict(self, full_image_path: str, roi_bbox: List[int], bbox_format: str = "auto") -> str:
         # 【终极防御】用 Try-Except 包裹，防止任何内部错误导致后端服务崩溃
         try:
             reasons = []
@@ -63,15 +116,7 @@ class InferenceEngineAPI:
             thresh_low = thresh.get('suspect_low', 0.50)
 
             # ================== BBox 严密越界保护 ==================
-            raw_x, raw_y = roi_bbox[0], roi_bbox[1]
-            raw_w = roi_bbox[2] if roi_bbox[2] < 2000 else roi_bbox[2] - raw_x
-            raw_h = roi_bbox[3] if roi_bbox[3] < 2000 else roi_bbox[3] - raw_y
-
-            # 强制限制在图片物理尺寸内，防止切片时越界报错
-            x1 = max(0, min(raw_x, img_w - 1))
-            y1 = max(0, min(raw_y, img_h - 1))
-            x2 = max(x1 + 1, min(raw_x + raw_w, img_w))
-            y2 = max(y1 + 1, min(raw_y + raw_h, img_h))
+            x1, y1, x2, y2 = self._normalize_roi_bbox(roi_bbox, img_w, img_h, bbox_format)
 
             x, y = x1, y1
             w, h = x2 - x1, y2 - y1
@@ -90,9 +135,11 @@ class InferenceEngineAPI:
             roi_img_expanded = img[y_exp:y_exp + h_exp, x_exp:x_exp + w_exp]
 
             roi_rgb = cv2.cvtColor(roi_img, cv2.COLOR_BGR2RGB)
-            feats, stats = self.extractor.extract_from_roi(roi_rgb)
+            feats, stats, feature_texts = self.extractor.extract_from_roi(roi_rgb)
 
-            extracted_text = "".join([s['text'] for s in stats])
+            extracted_text = "".join(feature_texts) if feature_texts else "".join([s['text'] for s in stats])
+            text_profile = self._profile_numeric_text(extracted_text, max_len)
+            should_use_font_signal = bool(text_profile["should_use_font_signal"])
 
             font_sim = np.mean([self.font_lib.search_similarity(f) for f in feats]) if feats else 0.5
             font_anomaly = max(0.0, 1.0 - font_sim)
@@ -101,19 +148,21 @@ class InferenceEngineAPI:
             geo_reasons, geo_penalty = TamperAnalyzer.check_internal_consistency(stats)
 
             # ================== 3. 自适应权重计算 ==================
-            is_non_core_amount = bool(re.search(r'[\u4e00-\u9fa5a-zA-Z]', extracted_text)) or len(
-                extracted_text) > max_len
+            if should_use_font_signal and len(extracted_text) > 0:
+                local_tamper_prob = (
+                    pixel_anomaly * weights.get('core_pixel', 0.6)
+                ) + (
+                    font_anomaly * weights.get('core_font', 0.4)
+                ) + geo_penalty
 
-            if is_non_core_amount or len(extracted_text) == 0:
-                # 非核心字段豁免逻辑
-                local_tamper_prob = pixel_anomaly * weights.get('non_core_pixel', 0.8)
-                geo_penalty = 0.0
-                if pixel_anomaly < thresh_exempt:
-                    local_tamper_prob = 0.0
+                # 长数字串/单号一旦字体风格明显跳变，直接抬到“可疑”门槛附近。
+                if text_profile["digit_count"] >= 8 and font_anomaly > 0.75:
+                    local_tamper_prob = max(local_tamper_prob, thresh_low + 0.02)
             else:
-                # 核心字段双重校验逻辑
-                local_tamper_prob = (pixel_anomaly * weights.get('core_pixel', 0.6)) + (
-                            font_anomaly * weights.get('core_font', 0.4)) + geo_penalty
+                # 非核心字段仍保留几何/像素信号，避免 OCR 一抖就被直接豁免。
+                local_tamper_prob = (pixel_anomaly * weights.get('non_core_pixel', 0.8)) + geo_penalty
+                if pixel_anomaly < thresh_exempt and geo_penalty == 0:
+                    local_tamper_prob = 0.0
 
             final_risk = max(global_fake_prob, local_tamper_prob)
             final_risk = max(0.0, min(1.0, float(final_risk)))
@@ -123,6 +172,8 @@ class InferenceEngineAPI:
                 reasons.append("全局UI布局异常")
             if pixel_anomaly > thresh_pixel_alert:
                 reasons.append("存在局部边缘拼接/像素涂抹痕迹")
+            if should_use_font_signal and font_anomaly > 0.55:
+                reasons.append("局部字体风格异常")
             if geo_penalty > 0:
                 reasons.extend(geo_reasons)
 
@@ -170,7 +221,7 @@ if __name__ == "__main__":
         exit(1)
 
     # 替换为你 images/ 文件夹下真实存在的图片进行本地测试
-    test_image_path = "pptest/111.png"
+    test_image_path = "images/no (11).jpg"
     test_bbox = [150, 200, 180, 45]
 
     if not os.path.exists(test_image_path):

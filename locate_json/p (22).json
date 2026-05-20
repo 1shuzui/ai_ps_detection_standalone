@@ -1,0 +1,94 @@
+{
+  "image_path": "images\\p (22).jpg",
+  "width": 1280,
+  "height": 2832,
+  "key_regions": [
+    {
+      "text": "转给  张红",
+      "confidence": 0.6060936289051225,
+      "bbox": [
+        506,
+        391,
+        781,
+        476
+      ],
+      "type": "name",
+      "is_tampered": false
+    },
+    {
+      "text": "99,990:00",
+      "confidence": 0.9450696416766843,
+      "bbox": [
+        404,
+        486,
+        964,
+        626
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.862296621213069,
+      "bbox": [
+        742,
+        1198,
+        1240,
+        1266
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "202",
+      "confidence": 0.862296621213069,
+      "bbox": [
+        742,
+        1198,
+        1240,
+        1266
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 05",
+      "confidence": 0.862296621213069,
+      "bbox": [
+        742,
+        1198,
+        1240,
+        1266
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "2026 - 01 - 05",
+      "confidence": 0.862296621213069,
+      "bbox": [
+        742,
+        1198,
+        1240,
+        1266
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "621",
+      "confidence": 0.6984552386028487,
+      "bbox": [
+        910,
+        1324,
+        1239,
+        1387
+      ],
+      "type": "amount",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610039.3590834,
+  "ocr_success": true,
+  "detected_count": 7
+}

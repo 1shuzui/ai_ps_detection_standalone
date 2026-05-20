@@ -1,0 +1,94 @@
+{
+  "image_path": "images\\p (17).jpg",
+  "width": 718,
+  "height": 640,
+  "key_regions": [
+    {
+      "text": "240",
+      "confidence": 0.07016247225106893,
+      "bbox": [
+        38,
+        376,
+        566,
+        424
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "240",
+      "confidence": 0.07016247225106893,
+      "bbox": [
+        38,
+        376,
+        566,
+        424
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "240",
+      "confidence": 0.07016247225106893,
+      "bbox": [
+        38,
+        376,
+        566,
+        424
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "13:40",
+      "confidence": 0.07016247225106893,
+      "bbox": [
+        38,
+        376,
+        566,
+        424
+      ],
+      "type": "date",
+      "is_tampered": false
+    },
+    {
+      "text": "371",
+      "confidence": 0.13921794210401733,
+      "bbox": [
+        40,
+        414,
+        460,
+        462
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "371",
+      "confidence": 0.13921794210401733,
+      "bbox": [
+        40,
+        414,
+        460,
+        462
+      ],
+      "type": "amount",
+      "is_tampered": false
+    },
+    {
+      "text": "371",
+      "confidence": 0.13921794210401733,
+      "bbox": [
+        40,
+        414,
+        460,
+        462
+      ],
+      "type": "amount",
+      "is_tampered": false
+    }
+  ],
+  "timestamp": 1772610001.1526196,
+  "ocr_success": true,
+  "detected_count": 7
+}
