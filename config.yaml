@@ -10,22 +10,54 @@ dataset:
   image_dir: "images"
   json_dir: "locate_json"
 
-# 【新增】业务规则与几何参数
+# 业务规则与几何参数
 business_rules:
   roi_expand_margin: 15          # 局部微观分析时的外扩像素边距
   max_core_text_length: 15       # 核心金额字符串最大长度（超过此长度视为订单号/非核心项）
 
-# 【新增】自适应判定权重
+# 自适应判定权重
 weights:
   core_pixel: 0.60               # 核心字段：像素异常的权重
   core_font: 0.40                # 核心字段：字体异常的权重
   non_core_pixel: 0.80           # 非核心字段：纯像素异常的权重
 
-# 【更新】全局阈值控制中心
+# 全局阈值控制中心
 thresholds:
   global_fake: 0.65              # 全局大模型风险 > 此值，判定排版异常
   pixel_anomaly_alert: 0.60      # 局部像素风险 > 此值，触发拼接涂抹报警
   exempt_pixel_safe: 0.40        # 非核心字段的像素风险 < 此值，直接豁免清零
+  suspect_high: 0.65             # 综合风险率 > 此值，最终定性为"篡改"
+  suspect_low: 0.50              # 综合风险率 > 此值，最终定性为"可疑"
 
-  suspect_high: 0.65             # 综合风险率 > 此值，最终定性为“篡改”
-  suspect_low: 0.50              # 综合风险率 > 此值，最终定性为“可疑”
+# 融合策略（替代单一的 max(global, local)）
+fusion:
+  method: "weighted"             # "weighted" | "max" — weighted 实现证据互补
+  weight_global: 0.35            # 全局特征在融合中的权重
+  weight_local: 0.65             # 局部特征在融合中的权重
+
+# 像素检测器可配置参数
+pixel_detector:
+  generator_enabled: true          # 是否启用生成器假图检测
+  generator_bg_var_threshold: 0.05 # 背景方差低于此值触发
+  generator_penalty: 0.70          # 生成器假图惩罚分（可调低以降低白底文档误报）
+  noise_consistency_weight: 0.15   # 噪声一致性检测权重
+  color_consistency_weight: 0.10   # 颜色一致性检测权重
+
+# EXIF / 元数据分析
+originality:
+  enabled: true                  # 是否启用 EXIF/元数据分析
+
+# 人工标注与反馈训练
+feedback:
+  enabled: true
+  storage_dir: "feedback"          # 标注数据存储根目录
+  correct_dir: "feedback/correct"  # 用户判断正确的样本
+  wrong_dir: "feedback/wrong"      # 用户判断错误的样本（含整图+框选区域）
+  suspicious_dir: "feedback/suspicious"  # 疑似错误待确认
+
+# 训练与可视化
+training:
+  output_dir: "models/trained"         # 训练产出目录
+  visualization_enabled: true          # 是否保存训练过程可视化图片
+  visualization_dir: "models/trained/viz"  # 可视化图片保存路径
+  backup_previous: true                # 训练前是否备份旧模型

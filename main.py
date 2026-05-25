@@ -258,6 +258,7 @@ class DetectionDomainServiceV3:
         self._cached_img_cv2 = None
         self._cached_tokens = None
         self._cached_candidates = None
+        self._cached_global_feat = None
 
     @staticmethod
     def _bbox_iou(a: BBoxDTO, b: BBoxDTO) -> float:
@@ -284,16 +285,17 @@ class DetectionDomainServiceV3:
         return deduped
 
     def _run_ocr_once(self, image_path: str):
-        """读取图片并执行 OCR tokenize + amount 候选构建，结果缓存供后续复用。"""
+        """读取图片并执行 OCR + 全局特征提取，结果缓存供后续复用。"""
         if self._cached_tokens is not None:
             return
         img_cv2 = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
         if img_cv2 is None:
             return
+        self._cached_img_cv2 = img_cv2
+        self._cached_global_feat = self.engine.extractor.extract_global_feature(img_cv2)
         gray = cv2.cvtColor(img_cv2, cv2.COLOR_BGR2GRAY)
         blurred = cv2.medianBlur(gray, 3)
         ocr_results = self.ocr_reader.readtext(blurred, adjust_contrast=0.5, mag_ratio=2.0, text_threshold=0.25)
-        self._cached_img_cv2 = img_cv2
         self._cached_tokens = tokenize_ocr_results(ocr_results)
         self._cached_candidates = build_amount_candidates(self._cached_tokens, img_cv2.shape)
 
@@ -374,13 +376,16 @@ class DetectionDomainServiceV3:
                         await self.registry.update_task(task_id, status=TaskStatusEnum.COMPLETED, result=empty_res)
                     return
 
+                global_feat = self._cached_global_feat
                 all_results = []
                 for b in bboxes:
                     try:
                         b_list = [b.x1, b.y1, b.x2, b.y2]
                         # 对循环切片推理施加严格的并发控制，多请求排队等待
                         async with self.semaphore:
-                            res_str = await run_in_threadpool(self.engine.predict, image_path, b_list, "xyxy")
+                            res_str = await run_in_threadpool(
+                                self.engine.predict, image_path, b_list, "xyxy", global_feat
+                            )
                             
                         res_dict = json.loads(res_str)
                         if res_dict.get("result") != "错误":
@@ -542,6 +547,110 @@ async def cancel_task(task_id: str, registry: AbstractTaskRegistry = Depends(get
     else:
         await registry.delete_task(task_id)
     return {"status": "success"}
+
+# ---- 人工标注反馈系统 ----
+class JudgmentRequest(BaseModel):
+    task_id: str
+    judgment: str = Field(..., pattern="^(correct|wrong|suspicious)$")
+    bbox: Optional[List[int]] = None
+    note: str = ""
+
+
+@api_router_v3.post("/feedback/judge", summary="提交人工判断标注")
+async def submit_judgment(
+    req: JudgmentRequest,
+    registry: AbstractTaskRegistry = Depends(get_registry),
+):
+    from feedback_manager import FeedbackManager
+
+    task = await registry.get_task(req.task_id)
+    if not task:
+        raise HTTPException(404, "任务不存在")
+
+    fb = FeedbackManager()
+    result = task.result or {}
+    bbox = req.bbox
+    if bbox is None:
+        bbox = result.get("original_bbox") or result.get("bbox")
+    entry = fb.save_judgment(
+        task_id=req.task_id,
+        judgment=req.judgment,
+        image_path=task.image_path,
+        bbox=bbox,
+        result=result,
+        note=req.note,
+    )
+    logger.info("反馈已保存: task=%s judgment=%s entry=%s", req.task_id, req.judgment, entry.get("entry_id"))
+    return {"status": "success", "entry": entry}
+
+
+@api_router_v3.get("/feedback/list", summary="列出反馈记录")
+async def list_feedback(judgment: Optional[str] = Query(None, pattern="^(correct|wrong|suspicious)$")):
+    from feedback_manager import FeedbackManager
+
+    fb = FeedbackManager()
+    entries = fb.list_entries(judgment_filter=judgment)
+    return {"total": len(entries), "items": entries}
+
+
+@api_router_v3.post("/feedback/confirm", summary="确认疑似标注转向")
+async def confirm_suspicious(folder_name: str = Form(...), judgment: str = Form(..., pattern="^(correct|wrong)$")):
+    from feedback_manager import FeedbackManager
+
+    fb = FeedbackManager()
+    entry = fb.confirm_suspicious(folder_name, judgment)
+    if not entry:
+        raise HTTPException(404, "疑似条目不存在或已处理")
+    return {"status": "success", "entry": entry}
+
+
+# ---- 训练端点 (含风险提示) ----
+class TrainResponse(BaseModel):
+    status: str
+    warning: str = "训练将使用反馈数据+原始数据集重新训练模型。这将覆盖当前模型（旧模型自动备份）。训练期间 GPU 资源占用高，可能影响正在进行的检测任务。"
+    summary: Optional[Dict[str, Any]] = None
+
+
+@api_router_v3.post("/train", summary="触发模型训练（含风险警告）")
+async def trigger_training(
+    confirm: bool = Form(False, description="必须设为 true 以确认风险"),
+    engine: InferenceEngineAPI = Depends(get_engine),
+    ocr_reader: Any = Depends(get_ocr_reader),
+):
+    if not confirm:
+        return TrainResponse(
+            status="aborted",
+            warning="请仔细阅读风险提示，确认后将 confirm 设为 true 重新提交。",
+        )
+
+    from train_pipeline_v2 import TrainPipeline
+
+    async def _train_async():
+        pipeline = TrainPipeline(ocr_reader=ocr_reader)
+        return await run_in_threadpool(pipeline.run)
+
+    try:
+        # training runs in thread pool to avoid blocking
+        summary = await run_in_threadpool(
+            lambda: TrainPipeline(ocr_reader=ocr_reader).run()
+        )
+        return TrainResponse(status="completed", summary=summary)
+    except Exception as e:
+        logger.exception("训练失败")
+        return TrainResponse(status="failed", warning=f"训练异常: {str(e)}")
+
+
+# ---- 训练可视化图片获取 ----
+@api_router_v3.get("/train/viz/{filename}", summary="获取训练可视化图片")
+async def get_train_visualization(filename: str):
+    from train_pipeline_v2 import TrainPipeline
+
+    pipeline = TrainPipeline()
+    viz_file = pipeline.viz_dir / filename
+    if not viz_file.exists():
+        raise HTTPException(404, "可视化图片不存在")
+    return FileResponse(str(viz_file), media_type="image/png")
+
 
 app.include_router(api_router_v3)
 

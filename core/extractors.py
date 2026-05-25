@@ -144,6 +144,7 @@ class FontFeatureLibrary:
         self.dim = dim
         self.index = faiss.IndexFlatL2(dim)
         self.char_labels = []
+        self._dist_decay: float = 100.0
 
     def add(self, feats, texts):
         if len(feats) == 0: return
@@ -154,19 +155,46 @@ class FontFeatureLibrary:
         os.makedirs(os.path.dirname(path), exist_ok=True)
         faiss.write_index(self.index, f"{path}.index")
         with open(f"{path}_meta.pkl", 'wb') as f:
-            pickle.dump({'char_labels': self.char_labels}, f)
+            pickle.dump({"char_labels": self.char_labels, "dist_decay": self._dist_decay}, f)
 
     def load(self, path):
         if not os.path.exists(f"{path}.index"): return False
         self.index = faiss.read_index(f"{path}.index")
-        with open(f"{path}_meta.pkl", 'rb') as f:
+        with open(f"{path}_meta.pkl", "rb") as f:
             meta = pickle.load(f)
-            self.char_labels = meta['char_labels']
+            self.char_labels = meta["char_labels"]
+            self._dist_decay = float(meta.get("dist_decay", 100.0))
         return True
+
+    def _calibrate_decay(self, sample_feats: np.ndarray | None = None):
+        """基于库内距离分布校准衰减系数，使 median 相似度 ≈ 0.5。"""
+        if self.index.ntotal < 2:
+            self._dist_decay = 100.0
+            return
+        if sample_feats is None:
+            n_sample = min(self.index.ntotal, 500)
+            sample_feats = np.array(self.index.reconstruct_n(0, n_sample), dtype=np.float32)
+        if sample_feats.shape[0] < 2:
+            return
+        D, _ = self.index.search(sample_feats, 2)
+        median_dist = float(np.median(D[:, 1]))
+        if median_dist > 0:
+            self._dist_decay = median_dist / np.log(2.0)
 
     def search_similarity(self, query_feat):
         if self.index.ntotal == 0: return 0.5
-        D, I = self.index.search(np.array([query_feat]).astype('float32'), 1)
+        D, _ = self.index.search(np.array([query_feat]).astype("float32"), 1)
         dist = D[0][0]
-        sim = np.exp(-dist / 100.0)
+        sim = np.exp(-dist / max(self._dist_decay, 1.0))
         return float(np.clip(sim, 0.0, 1.0))
+
+    def search_similarity_batch(self, query_feats: list) -> list[float]:
+        """批量查询字体相似度，避免逐条 FAISS 往返开销。"""
+        if not query_feats:
+            return []
+        if self.index.ntotal == 0:
+            return [0.5] * len(query_feats)
+        arr = np.array(query_feats, dtype="float32")
+        D, _ = self.index.search(arr, 1)
+        sims = np.exp(-D[:, 0] / max(self._dist_decay, 1.0))
+        return [float(np.clip(s, 0.0, 1.0)) for s in sims]
