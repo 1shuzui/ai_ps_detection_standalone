@@ -6,13 +6,13 @@ import logging
 import os
 import joblib
 import re
-from typing import Dict, List, Tuple
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 from core.extractors import FeatureExtractor, FontFeatureLibrary, TamperAnalyzer
 from core.detectors import PixelLevelDetector
 from core.utils import NumpyEncoder, safe_read_image
 
-# 配置标准日志输出
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
@@ -21,19 +21,30 @@ logger = logging.getLogger(__name__)
 
 
 class InferenceEngineAPI:
-    def __init__(self, config_path="config.yaml"):
-        # 引擎初始化时读取配置
-        with open(config_path, 'r', encoding='utf-8') as f:
+    def __init__(self, config_path="config.yaml", shared_ocr_reader: Optional[Any] = None):
+        """共享 OCR reader 可避免与路由层各持一份 EasyOCR 模型（省数百MB显存）。"""
+        config_file = Path(config_path)
+        if not config_file.is_absolute():
+            config_file = (Path(__file__).resolve().parent / config_file).resolve()
+
+        with open(config_file, 'r', encoding='utf-8') as f:
             self.config = yaml.safe_load(f)
+        self.base_dir = config_file.parent
 
-        self.extractor = FeatureExtractor()
+        self.extractor = FeatureExtractor(reader=shared_ocr_reader)
         self.font_lib = FontFeatureLibrary()
-        self.font_lib.load(self.config['paths']['font_lib_path'])
+        font_lib_path = self._resolve_path(self.config['paths']['font_lib_path'])
+        self.font_lib.load(font_lib_path)
 
-        # 从配置中读取全局模型路径（兼容缺省路径）
         xgb_path = self.config.get('paths', {}).get('xgb_model_path', "models/global_layout_model.pkl")
-        self.global_model = joblib.load(xgb_path)
+        self.global_model = joblib.load(self._resolve_path(xgb_path))
         self.pixel_detector = PixelLevelDetector()
+
+    def _resolve_path(self, path_str: str) -> str:
+        path = Path(path_str)
+        if path.is_absolute():
+            return str(path)
+        return str((self.base_dir / path).resolve())
 
     @staticmethod
     def _clip_bbox_xyxy(bbox_xyxy: List[int], img_w: int, img_h: int) -> Tuple[int, int, int, int]:
@@ -135,8 +146,9 @@ class InferenceEngineAPI:
             roi_img_expanded = img[y_exp:y_exp + h_exp, x_exp:x_exp + w_exp]
 
             roi_rgb = cv2.cvtColor(roi_img, cv2.COLOR_BGR2RGB)
-            feats, stats, feature_texts = self.extractor.extract_from_roi(roi_rgb)
+            feats, stats = self.extractor.extract_from_roi(roi_rgb)
 
+            feature_texts = [s['text'] for s in stats if s.get('is_core_number')]
             extracted_text = "".join(feature_texts) if feature_texts else "".join([s['text'] for s in stats])
             text_profile = self._profile_numeric_text(extracted_text, max_len)
             should_use_font_signal = bool(text_profile["should_use_font_signal"])

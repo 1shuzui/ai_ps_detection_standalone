@@ -179,28 +179,27 @@ async def lifespan(app: FastAPI):
     try:
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         logger.info(f"Loading EasyOCR on device: {device}")
-        EngineContainer.ocr_reader = easyocr.Reader(['ch_sim', 'en'], gpu=(device == 'cuda'))
-        EngineContainer.instance = InferenceEngineAPI(config_path="config.yaml")
+        ocr_reader = easyocr.Reader(['ch_sim', 'en'], gpu=(device == 'cuda'))
+        EngineContainer.ocr_reader = ocr_reader
+        EngineContainer.instance = InferenceEngineAPI(config_path="config.yaml", shared_ocr_reader=ocr_reader)
         EngineContainer.registry = MemoryTaskRegistry()
         EngineContainer.ai_semaphore = asyncio.Semaphore(MAX_CONCURRENT_AI_TASKS)
-        logger.info("AI Infrastructure loaded successfully.")
-        
-        # 挂载后台垃圾回收任务
+        logger.info("AI Infrastructure loaded successfully (shared OCR reader).")
+
         cleanup_task = asyncio.create_task(cleanup_daemon(EngineContainer.registry, STORAGE_DIR))
-        
+
     except Exception as e:
         logger.error("Failed to load AI Infrastructure.", exc_info=True)
         raise RuntimeError("Initialization failed.") from e
-    
-    yield  # 服务运行期
-    
-    # 优雅停机卸载资源
+
+    yield
+
     cleanup_task.cancel()
     try:
         await cleanup_task
     except asyncio.CancelledError:
         pass
-        
+
     EngineContainer.instance = None
     EngineContainer.registry = None
     EngineContainer.ocr_reader = None
@@ -250,12 +249,15 @@ class DetectionService:
 
 
 class DetectionDomainServiceV3:
-    """【新增】V3 异步领域服务 (支持全图多框独立检测与并发锁保护)"""
+    """V3 异步领域服务 (支持全图多框独立检测、并发锁保护、OCR 结果复用)"""
     def __init__(self, engine: InferenceEngineAPI, registry: AbstractTaskRegistry, ocr_reader: Any, semaphore: asyncio.Semaphore):
         self.engine = engine
         self.registry = registry
         self.ocr_reader = ocr_reader
         self.semaphore = semaphore
+        self._cached_img_cv2 = None
+        self._cached_tokens = None
+        self._cached_candidates = None
 
     @staticmethod
     def _bbox_iou(a: BBoxDTO, b: BBoxDTO) -> float:
@@ -281,39 +283,42 @@ class DetectionDomainServiceV3:
             deduped.append(bbox)
         return deduped
 
-    def _easyocr_auto_detect(self, image_path: str) -> List[BBoxDTO]:
-        logger.info(f"Running EasyOCR multi-bbox detection for {image_path}")
-        img_cv2 = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
-        if img_cv2 is None: return []
-
-        gray = cv2.cvtColor(img_cv2, cv2.COLOR_BGR2GRAY)
-        blurred = cv2.medianBlur(gray, 3) 
-        
-        ocr_results = self.ocr_reader.readtext(blurred, adjust_contrast=0.5, mag_ratio=2.0, text_threshold=0.25)
-        tokens = tokenize_ocr_results(ocr_results)
-        candidates = build_amount_candidates(tokens, img_cv2.shape)
-        bboxes = [
-            BBoxDTO(x1=int(candidate.bbox[0]), y1=int(candidate.bbox[1]), x2=int(candidate.bbox[2]), y2=int(candidate.bbox[3]))
-            for candidate in candidates
-        ]
-        
-        return self._deduplicate_bboxes(bboxes)
-
-    def _document_rule_override(self, image_path: str) -> Optional[Dict[str, Any]]:
+    def _run_ocr_once(self, image_path: str):
+        """读取图片并执行 OCR tokenize + amount 候选构建，结果缓存供后续复用。"""
+        if self._cached_tokens is not None:
+            return
         img_cv2 = cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
         if img_cv2 is None:
-            return None
-
+            return
         gray = cv2.cvtColor(img_cv2, cv2.COLOR_BGR2GRAY)
         blurred = cv2.medianBlur(gray, 3)
         ocr_results = self.ocr_reader.readtext(blurred, adjust_contrast=0.5, mag_ratio=2.0, text_threshold=0.25)
-        tokens = tokenize_ocr_results(ocr_results)
-        candidates = build_amount_candidates(tokens, img_cv2.shape)
+        self._cached_img_cv2 = img_cv2
+        self._cached_tokens = tokenize_ocr_results(ocr_results)
+        self._cached_candidates = build_amount_candidates(self._cached_tokens, img_cv2.shape)
+
+    def _easyocr_auto_detect(self, image_path: str) -> List[BBoxDTO]:
+        logger.info(f"Running EasyOCR multi-bbox detection for {image_path}")
+        self._run_ocr_once(image_path)
+        if not self._cached_candidates:
+            return []
+        bboxes = [
+            BBoxDTO(x1=int(c.bbox[0]), y1=int(c.bbox[1]), x2=int(c.bbox[2]), y2=int(c.bbox[3]))
+            for c in self._cached_candidates
+        ]
+        return self._deduplicate_bboxes(bboxes)
+
+    def _document_rule_override(self, image_path: str) -> Optional[Dict[str, Any]]:
+        if self._cached_img_cv2 is None:
+            self._run_ocr_once(image_path)
+        if self._cached_img_cv2 is None or not self._cached_tokens:
+            return None
+
         override = detect_certificate_document_override(
             image_path=Path(image_path),
-            image=img_cv2,
-            tokens=tokens,
-            candidates=candidates,
+            image=self._cached_img_cv2,
+            tokens=self._cached_tokens,
+            candidates=self._cached_candidates or [],
             ocr_reader=self.ocr_reader,
         )
         if not override:

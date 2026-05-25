@@ -3,23 +3,28 @@ import cv2
 import torch
 import torchvision.transforms as transforms
 import torchvision.models as models
-import easyocr
 import numpy as np
 import faiss
 import pickle
 import logging
 import re
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
 
 class FeatureExtractor:
-    def __init__(self):
+    def __init__(self, reader: Optional[Any] = None):
+        """
+        :param reader: 复用已初始化的 easyocr.Reader，避免双份模型常驻内存
+        """
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        # 预加载 OCR，只实例化一次
-        self.reader = easyocr.Reader(['ch_sim', 'en'], gpu=(self.device.type == 'cuda'))
+        if reader is not None:
+            self.reader = reader
+        else:
+            import easyocr
+            self.reader = easyocr.Reader(['ch_sim', 'en'], gpu=(self.device.type == 'cuda'))
 
-        # 加载 ResNet 用于提取特征
         resnet = models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
         self.feature_extractor = torch.nn.Sequential(*list(resnet.children())[:-1]).to(self.device)
         self.feature_extractor.eval()
@@ -51,15 +56,15 @@ class FeatureExtractor:
 
     def extract_from_roi(self, roi_rgb):
         if roi_rgb is None or roi_rgb.size == 0:
-            return [], [], []
+            return [], []
 
         ocr_results = self.reader.readtext(roi_rgb)
 
         valid_stats = []
         tensor_list = []
-        feature_texts = []
+        feature_indices = []
 
-        for bbox, text, conf in ocr_results:
+        for idx, (bbox, text, conf) in enumerate(ocr_results):
             xs = [p[0] for p in bbox]
             ys = [p[1] for p in bbox]
             x1, y1, x2, y2 = int(min(xs)), int(min(ys)), int(max(xs)), int(max(ys))
@@ -71,11 +76,8 @@ class FeatureExtractor:
             if x2 <= x1 or y2 <= y1:
                 continue
 
-            # 【核心优化 1：精准打击】
-            # 判断这个框里是不是包含数字（剔除纯汉字如“净重”、“吨”）
             has_digit = bool(re.search(r'\d', text))
 
-            # 保存所有的排版信息（用于检测对齐）
             stat_info = {
                 'text': text,
                 'bbox': [x1, y1, x2, y2],
@@ -84,15 +86,13 @@ class FeatureExtractor:
             }
             valid_stats.append(stat_info)
 
-            # 只有包含数字的框，才截图喂给 ResNet 提特征
             if has_digit:
                 char_img = roi_rgb[y1:y2, x1:x2]
                 if char_img.size > 0:
                     tensor = self.transform_local(char_img)
                     tensor_list.append(tensor)
-                    feature_texts.append(text)
+                    feature_indices.append(idx)
 
-        # Batch 批量推理
         feats_list = []
         if tensor_list:
             batch_tensor = torch.stack(tensor_list).to(self.device)
@@ -102,7 +102,7 @@ class FeatureExtractor:
             batch_feats = batch_feats.view(batch_feats.size(0), -1).cpu().numpy()
             feats_list = [feat for feat in batch_feats]
 
-        return feats_list, valid_stats, feature_texts
+        return feats_list, valid_stats
 
 
 class TamperAnalyzer:
