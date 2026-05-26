@@ -42,3 +42,4 @@ uploads/
 *.db-shm
 *.db-wal
 civil_interview.db
+ROADMAP.md
