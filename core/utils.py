@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from datetime import datetime
 from functools import lru_cache
@@ -8,6 +9,8 @@ from typing import Optional
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+
+logger = logging.getLogger(__name__)
 
 # 兼容性修复：安全的NumPy类型检查
 NP_BOOL_TYPES = (np.bool_,) if hasattr(np, 'bool_') else (bool,)
@@ -76,16 +79,23 @@ def load_chinese_font(size: int = 20) -> ImageFont.ImageFont:
     font_path = resolve_chinese_font_path()
     if font_path:
         try:
+            # 预校验字体文件可读性，避免文件存在但损坏的静默失败
+            with open(font_path, "rb") as _f:
+                _header = _f.read(4)
+            if not _header:
+                raise OSError("字体文件为空")
             return ImageFont.truetype(font_path, size)
-        except OSError:
-            pass
+        except OSError as exc:
+            logger.warning("中文字体加载失败 path=%s size=%d error=%s", font_path, size, exc)
 
     for candidate in FONT_CANDIDATES:
         try:
             return ImageFont.truetype(candidate, size)
-        except OSError:
+        except OSError as exc:
+            logger.debug("后备字体尝试失败 candidate=%s: %s", candidate, exc)
             continue
 
+    logger.error("无法加载任何中文字体，回退到默认位图字体——中文标签将显示为方框")
     return ImageFont.load_default()
 
 

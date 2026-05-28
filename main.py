@@ -26,29 +26,41 @@ import numpy as np
 import torch
 import easyocr
 import uvicorn
+import yaml
 from fastapi import APIRouter, BackgroundTasks, Depends, FastAPI, File, Form, HTTPException, Query, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import FileResponse, JSONResponse
+
 from pydantic import BaseModel, ConfigDict, Field
 from PIL import Image, ImageDraw, ImageFont
 
-from batch_eval_amounts import build_amount_candidates, detect_certificate_document_override, tokenize_ocr_results
+from core.logging_config import configure_logging
+from core.ocr_utils import build_amount_candidates, detect_certificate_document_override, tokenize_ocr_results
 from core.utils import load_chinese_font
 from inference_api import InferenceEngineAPI
 
 # ==========================================
 # 0. 全局配置与基础设施初始化
 # ==========================================
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+_config_path = Path(__file__).resolve().parent / "config.yaml"
+with open(_config_path, "r", encoding="utf-8") as _f:
+    _app_config = yaml.safe_load(_f)
+
+_startup_time = configure_logging(_app_config)
 logger = logging.getLogger(__name__)
 
-STORAGE_DIR = "/tmp/tamper_detector_storage"
+_server_cfg = _app_config.get("server", {})
+STORAGE_DIR = str(Path(_server_cfg.get("storage_dir", "data/storage")).resolve())
 os.makedirs(STORAGE_DIR, exist_ok=True)
 
-# 生产级安全配置
-MAX_CONCURRENT_AI_TASKS = 1  # 严格限制同时访问 GPU 的任务数，1为绝对安全防 OOM，视显存可调为 2 或 3
-GC_MAX_AGE_HOURS = 24        # 文件及任务保留的最长时间 (小时)
-GC_INTERVAL_SECONDS = 3600   # 垃圾回收轮询间隔 (1小时)
+MAX_CONCURRENT_AI_TASKS = _server_cfg.get("max_concurrent_tasks", 1)
+GC_MAX_AGE_HOURS = _server_cfg.get("gc_max_age_hours", 24)
+GC_INTERVAL_SECONDS = _server_cfg.get("gc_interval_seconds", 3600)
+
+_ocr_cfg = _app_config.get("ocr", {})
+OCR_ADJUST_CONTRAST = _ocr_cfg.get("adjust_contrast", 0.5)
+OCR_MAG_RATIO = _ocr_cfg.get("mag_ratio", 2.0)
+OCR_TEXT_THRESHOLD = _ocr_cfg.get("text_threshold", 0.25)
 
 # ==========================================
 # 1. 数据契约与防腐层 (Data Contracts / ACL)
@@ -295,7 +307,12 @@ class DetectionDomainServiceV3:
         self._cached_global_feat = self.engine.extractor.extract_global_feature(img_cv2)
         gray = cv2.cvtColor(img_cv2, cv2.COLOR_BGR2GRAY)
         blurred = cv2.medianBlur(gray, 3)
-        ocr_results = self.ocr_reader.readtext(blurred, adjust_contrast=0.5, mag_ratio=2.0, text_threshold=0.25)
+        ocr_results = self.ocr_reader.readtext(
+            blurred,
+            adjust_contrast=OCR_ADJUST_CONTRAST,
+            mag_ratio=OCR_MAG_RATIO,
+            text_threshold=OCR_TEXT_THRESHOLD,
+        )
         self._cached_tokens = tokenize_ocr_results(ocr_results)
         self._cached_candidates = build_amount_candidates(self._cached_tokens, img_cv2.shape)
 
@@ -625,15 +642,31 @@ async def trigger_training(
 
     from train_pipeline_v2 import TrainPipeline
 
-    async def _train_async():
-        pipeline = TrainPipeline(ocr_reader=ocr_reader)
-        return await run_in_threadpool(pipeline.run)
-
     try:
         # training runs in thread pool to avoid blocking
         summary = await run_in_threadpool(
             lambda: TrainPipeline(ocr_reader=ocr_reader).run()
         )
+
+        # 训练完成后自动将产出复制到活跃模型路径并热重载
+        if summary.get("status") == "completed":
+            import shutil
+            trained_model = summary.get("model_path")
+            trained_font_lib = summary.get("font_lib_path")
+            if trained_model:
+                active_model = engine._xgb_path
+                shutil.copy2(trained_model, active_model)
+                logger.info("已复制训练模型到活跃路径: %s", active_model)
+            if trained_font_lib:
+                import glob
+                for src_pattern in [f"{trained_font_lib}.index", f"{trained_font_lib}_meta.pkl"]:
+                    src = src_pattern
+                    dst = f"{engine._font_lib_path}{src_pattern[len(trained_font_lib):]}"
+                    if os.path.exists(src):
+                        shutil.copy2(src, dst)
+                logger.info("已复制字体库到活跃路径: %s", engine._font_lib_path)
+            engine.reload_models()
+
         return TrainResponse(status="completed", summary=summary)
     except Exception as e:
         logger.exception("训练失败")
@@ -652,7 +685,57 @@ async def get_train_visualization(filename: str):
     return FileResponse(str(viz_file), media_type="image/png")
 
 
+@api_router_v3.get("/models", summary="列出所有模型版本")
+async def list_models(engine: InferenceEngineAPI = Depends(get_engine)):
+    return engine.list_model_versions()
+
+
+@api_router_v3.post("/reload", summary="热重载模型（无需重启服务）")
+async def reload_models(
+    version: Optional[str] = Form(None, description="指定版本时间戳，不传则加载当前活跃版本"),
+    engine: InferenceEngineAPI = Depends(get_engine),
+):
+    result = engine.reload_models(version=version)
+    return {"status": "success", "detail": result}
+
+
+@api_router_v3.get("/metrics", summary="推理指标监控（Prometheus 格式）")
+async def get_metrics(engine: InferenceEngineAPI = Depends(get_engine)):
+    m = engine.get_metrics()
+    lines = [
+        "# HELP tamper_detection_predictions_total Total number of predictions.",
+        "# TYPE tamper_detection_predictions_total counter",
+        f"tamper_detection_predictions_total {m['total_predictions']}",
+        f"tamper_detection_tampered_total {m['tampered_count']}",
+        f"tamper_detection_suspicious_total {m['suspicious_count']}",
+        f"tamper_detection_normal_total {m['normal_count']}",
+        f"tamper_detection_errors_total {m['error_count']}",
+        "# HELP tamper_detection_inference_ms Inference latency in milliseconds.",
+        "# TYPE tamper_detection_inference_ms gauge",
+        f"tamper_detection_inference_p50_ms {m['inference_p50_ms']}",
+        f"tamper_detection_inference_p99_ms {m['inference_p99_ms']}",
+        f"tamper_detection_inference_avg_ms {m['avg_inference_ms']}",
+        "# HELP tamper_detection_font_lib_info Font library status.",
+        "# TYPE tamper_detection_font_lib_info gauge",
+        f"tamper_detection_font_lib_size {m['font_lib_size']}",
+        f"tamper_detection_font_lib_ready {1 if m['font_lib_ready'] else 0}",
+    ]
+    from fastapi.responses import PlainTextResponse
+    return PlainTextResponse("\n".join(lines) + "\n", media_type="text/plain; charset=utf-8")
+
+
+@api_router_v3.get("/health", summary="系统健康检查")
+async def health_check(engine: InferenceEngineAPI = Depends(get_engine)):
+    return {
+        "status": "ok",
+        "font_lib_ready": engine.font_lib.is_ready,
+        "font_lib_size": engine.font_lib.index.ntotal,
+        "global_model_loaded": engine.global_model is not None,
+        "ocr_available": engine.extractor.reader is not None,
+    }
+
+
 app.include_router(api_router_v3)
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=7000, workers=1)
+    uvicorn.run("main:app", host="0.0.0.0", port=8030, workers=1)

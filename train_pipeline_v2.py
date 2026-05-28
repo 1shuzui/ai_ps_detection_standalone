@@ -170,8 +170,46 @@ class TrainPipeline:
         with open(self.output_dir / f"train_summary_{timestamp}.json", "w", encoding="utf-8") as f:
             json.dump(summary, f, ensure_ascii=False, indent=2)
 
+        # 写入模型版本注册表
+        self._update_registry(
+            timestamp=timestamp,
+            model_path=model_path,
+            font_lib_path=font_lib_path,
+            train_accuracy=float(model.score(X, y)),
+            total_samples=len(global_y),
+        )
+
         logger.info("训练完成: %s", json.dumps(summary, ensure_ascii=False))
         return summary
+
+    def _update_registry(self, timestamp: str, model_path: str, font_lib_path: str,
+                         train_accuracy: float, total_samples: int) -> None:
+        """更新模型版本注册表 registry.json。"""
+        registry_path = Path(self._resolve(
+            self.config.get("training", {}).get("registry_path", "models/registry.json")
+        ))
+        registry_path.parent.mkdir(parents=True, exist_ok=True)
+
+        entry = {
+            "timestamp": timestamp,
+            "model_path": model_path,
+            "font_lib_path": font_lib_path,
+            "train_accuracy": train_accuracy,
+            "total_samples": total_samples,
+        }
+
+        registry = {"versions": []}
+        if registry_path.exists():
+            try:
+                with open(registry_path, "r", encoding="utf-8") as f:
+                    registry = json.load(f)
+            except (json.JSONDecodeError, OSError):
+                registry = {"versions": []}
+
+        registry.setdefault("versions", []).append(entry)
+        with open(registry_path, "w", encoding="utf-8") as f:
+            json.dump(registry, f, ensure_ascii=False, indent=2)
+        logger.info("已更新模型注册表: %s (共 %d 个版本)", registry_path, len(registry["versions"]))
 
     def _backup_models(self):
         """备份旧模型到带时间戳的子目录。"""

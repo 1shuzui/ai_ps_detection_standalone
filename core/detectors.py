@@ -7,7 +7,7 @@ from PIL import Image, ExifTags
 
 
 class PixelLevelDetector:
-    """像素级篡改检测器：ELA + 拉普拉斯边缘 + 生成器假图 + 噪声一致性 + 颜色一致性"""
+    """像素级篡改检测器：ELA + 拉普拉斯边缘 + 生成器假图 + 噪声一致性 + 颜色一致性 + DCT 频域分析"""
 
     def __init__(self, config: dict | None = None):
         cfg = config or {}
@@ -16,6 +16,8 @@ class PixelLevelDetector:
         self.generator_enabled = cfg.get("generator_enabled", True)
         self.noise_consistency_weight = cfg.get("noise_consistency_weight", 0.15)
         self.color_consistency_weight = cfg.get("color_consistency_weight", 0.10)
+        self.dct_analysis_enabled = cfg.get("dct_analysis_enabled", True)
+        self.dct_weight = cfg.get("dct_weight", 0.12)
 
     def detect(self, cropped_img_np, quality=85, surrounding_np=None, neighbor_rois=None):
         if cropped_img_np is None or cropped_img_np.size == 0:
@@ -42,6 +44,7 @@ class PixelLevelDetector:
         generator_penalty = 0.0
         noise_consistency_penalty = 0.0
         color_consistency_penalty = 0.0
+        dct_penalty = 0.0
 
         if h > 20 and w > 20:
             # 2a. 生成器假图检测（可配置）
@@ -69,7 +72,12 @@ class PixelLevelDetector:
             if neighbor_rois and len(neighbor_rois) > 0:
                 color_consistency_penalty = self._check_color_consistency(cropped_img_np, neighbor_rois)
 
-        score = ela_score + edge_penalty + generator_penalty + noise_consistency_penalty + color_consistency_penalty
+            # 2e. DCT 频域异常检测（AI 生成/修补图像）
+            dct_penalty = 0.0
+            if self.dct_analysis_enabled:
+                dct_penalty = self._check_dct_anomaly(gray)
+
+        score = ela_score + edge_penalty + generator_penalty + noise_consistency_penalty + color_consistency_penalty + dct_penalty
         return float(min(1.0, score))
 
     def _check_noise_consistency(self, roi_gray: np.ndarray, surrounding_np: np.ndarray) -> float:
@@ -91,7 +99,7 @@ class PixelLevelDetector:
             if ratio < 0.3:
                 return self.noise_consistency_weight
             return 0.0
-        except Exception:
+        except cv2.error:
             return 0.0
 
     def _check_color_consistency(self, roi_bgr: np.ndarray, neighbor_rois: list[np.ndarray]) -> float:
@@ -109,7 +117,7 @@ class PixelLevelDetector:
             if max_divergence > 0.5:
                 return self.color_consistency_weight
             return 0.0
-        except Exception:
+        except cv2.error:
             return 0.0
 
     @staticmethod
@@ -118,6 +126,53 @@ class PixelLevelDetector:
         hist = cv2.calcHist([hsv], [0, 1], None, [16, 16], [0, 256, 0, 256])
         hist = hist / (hist.sum() + 1e-10)
         return hist.flatten()
+
+    def _check_dct_anomaly(self, gray: np.ndarray) -> float:
+        """8x8 分块 DCT 频域分析，检测 AI 生成/修补图像的高频异常。
+
+        AI 生成或 inpainting 图像的 DCT 高频系数分布异常均匀或过低，
+        与自然图像/真实拍摄有明显差异。
+        """
+        if not self.dct_analysis_enabled:
+            return 0.0
+        try:
+            h, w = gray.shape
+            if h < 16 or w < 16:
+                return 0.0
+
+            gray_f = gray.astype(np.float32)
+            block_size = 8
+            h_blocks = h // block_size
+            w_blocks = w // block_size
+            if h_blocks < 2 or w_blocks < 2:
+                return 0.0
+
+            high_freq_energies = []
+            for i in range(h_blocks):
+                for j in range(w_blocks):
+                    block = gray_f[i * block_size:(i + 1) * block_size,
+                                   j * block_size:(j + 1) * block_size]
+                    dct_block = cv2.dct(block)
+                    zigzag = np.array([dct_block[k, l]
+                                       for k in range(block_size)
+                                       for l in range(block_size)
+                                       if k + l > 4])
+                    energy = float(np.std(zigzag))
+                    high_freq_energies.append(energy)
+
+            energies = np.array(high_freq_energies)
+            mean_energy = float(np.mean(energies))
+            std_energy = float(np.std(energies))
+
+            # 高频能量过低 -> 生成式平滑
+            if mean_energy < 0.8:
+                return self.dct_weight
+            # 高频能量分布异常均匀 -> 非自然拍摄
+            if mean_energy > 0 and (std_energy / mean_energy) < 0.15:
+                return self.dct_weight * 0.7
+            return 0.0
+        except cv2.error:
+            return 0.0
 
 
 class OriginalityChecker:

@@ -84,7 +84,7 @@ class FeedbackManager:
                     roi = img[y1:y2, x1:x2]
                     cropped_path = str(target_dir / "roi.jpg")
                     cv2.imencode(".jpg", roi)[1].tofile(cropped_path)
-            except Exception:
+            except (cv2.error, OSError):
                 pass
 
         # 保存元数据

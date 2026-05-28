@@ -6,6 +6,23 @@ paths:
   # 日志文件路径
   log_file: "logs/system_run.log"
 
+# 服务运行时配置
+server:
+  storage_dir: "data/storage"       # 任务文件存储目录（非 /tmp，避免重启丢失）
+  max_concurrent_tasks: 1            # 最大并发 AI 任务数（CPU-only 保持 1）
+  gc_max_age_hours: 24               # 文件及任务保留最长时间（小时）
+  gc_interval_seconds: 3600          # 垃圾回收轮询间隔（秒）
+
+# OCR 引擎参数
+ocr:
+  adjust_contrast: 0.5               # EasyOCR 对比度调节
+  mag_ratio: 2.0                     # EasyOCR 放大比率
+  text_threshold: 0.25               # EasyOCR 文本置信度阈值
+
+# 图像预处理
+preprocessing:
+  preserve_aspect_ratio: true        # Resize 前 PadToSquare 保持宽高比
+
 dataset:
   image_dir: "images"
   json_dir: "locate_json"
@@ -42,6 +59,8 @@ pixel_detector:
   generator_penalty: 0.70          # 生成器假图惩罚分（可调低以降低白底文档误报）
   noise_consistency_weight: 0.15   # 噪声一致性检测权重
   color_consistency_weight: 0.10   # 颜色一致性检测权重
+  dct_analysis_enabled: true        # 是否启用 DCT 频域分析（AI 生成图检测）
+  dct_weight: 0.12                  # DCT 频域异常惩罚权重
 
 # EXIF / 元数据分析
 originality:
@@ -55,9 +74,16 @@ feedback:
   wrong_dir: "feedback/wrong"      # 用户判断错误的样本（含整图+框选区域）
   suspicious_dir: "feedback/suspicious"  # 疑似错误待确认
 
+# 日志配置
+logging:
+  json_format: false               # 是否输出 JSON 格式日志（接入 ELK/Loki 时开启）
+  log_level: "INFO"                # 日志级别: DEBUG/INFO/WARNING/ERROR
+  log_file: ""                     # 日志文件路径，为空则仅输出到控制台
+
 # 训练与可视化
 training:
   output_dir: "models/trained"         # 训练产出目录
   visualization_enabled: true          # 是否保存训练过程可视化图片
   visualization_dir: "models/trained/viz"  # 可视化图片保存路径
   backup_previous: true                # 训练前是否备份旧模型
+  registry_path: "models/registry.json"  # 模型版本注册表路径

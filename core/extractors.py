@@ -14,9 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 class FeatureExtractor:
-    def __init__(self, reader: Optional[Any] = None):
+    def __init__(self, reader: Optional[Any] = None, preserve_aspect_ratio: bool = True):
         """
         :param reader: 复用已初始化的 easyocr.Reader，避免双份模型常驻内存
+        :param preserve_aspect_ratio: Resize 前用 PadToSquare 保持宽高比
         """
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         if reader is not None:
@@ -36,12 +37,15 @@ class FeatureExtractor:
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 
-        self.transform_global = transforms.Compose([
-            transforms.ToPILImage(),
+        global_steps = [transforms.ToPILImage()]
+        if preserve_aspect_ratio:
+            global_steps.append(PadToSquare())
+        global_steps += [
             transforms.Resize((224, 224)),
             transforms.ToTensor(),
-            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-        ])
+            transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+        ]
+        self.transform_global = transforms.Compose(global_steps)
 
     def extract_global_feature(self, img_np):
         if img_np is None or img_np.size == 0:
@@ -138,6 +142,64 @@ class TamperAnalyzer:
 
         return reasons, float(min(0.5, score_penalty))  # 排版惩罚最高不超过 0.5
 
+    @staticmethod
+    def check_cross_roi_consistency(roi_stats_list: list) -> tuple[float, list[str]]:
+        """跨 ROI 一致性分析 — 比较多个候选区域之间的字体特征一致性。
+
+        多个金额区域应具有相似的字体高度、基线对齐和颜色分布。
+        如果某区域与其他区域显著不一致，则可能是拼接篡改。
+        """
+        if len(roi_stats_list) < 2:
+            return 0.0, []
+
+        penalty = 0.0
+        reasons = []
+
+        heights_all = []
+        for stats in roi_stats_list:
+            num_stats = [s for s in stats if s.get('is_core_number', False)]
+            if num_stats:
+                h = [s['bbox'][3] - s['bbox'][1] for s in num_stats]
+                heights_all.append(np.mean(h))
+
+        if len(heights_all) >= 2:
+            h_arr = np.array(heights_all)
+            h_mean = np.mean(h_arr)
+            if h_mean > 0:
+                max_dev = max(abs(h_arr - h_mean)) / h_mean
+                if max_dev > 0.5:
+                    penalty += 0.15
+                    reasons.append("跨区域字体高度不一致(疑似不同来源拼接)")
+
+            y_baselines = []
+            for stats in roi_stats_list:
+                num_stats = [s for s in stats if s.get('is_core_number', False)]
+                if num_stats:
+                    y_baselines.append(np.mean([s['bbox'][1] for s in num_stats]))
+            if len(y_baselines) >= 2:
+                y_arr = np.array(y_baselines)
+                y_std = float(np.std(y_arr))
+                if y_std > 25:
+                    penalty += 0.20
+                    reasons.append("跨区域基线偏移过大(疑似不同行拼接)")
+
+        return float(min(0.4, penalty)), reasons
+
+
+class PadToSquare:
+    """用边缘复制填充为正方形，保持宽高比后再 Resize。"""
+
+    def __call__(self, img):
+        w, h = img.size
+        if w == h:
+            return img
+        size = max(w, h)
+        pad_w = (size - w) // 2
+        pad_h = (size - h) // 2
+        padding = (pad_w, pad_h, size - w - pad_w, size - h - pad_h)
+        import torchvision.transforms.functional as F
+        return F.pad(img, padding, padding_mode="edge")
+
 
 class FontFeatureLibrary:
     def __init__(self, dim=512):
@@ -145,6 +207,10 @@ class FontFeatureLibrary:
         self.index = faiss.IndexFlatL2(dim)
         self.char_labels = []
         self._dist_decay: float = 100.0
+
+    @property
+    def is_ready(self) -> bool:
+        return self.index.ntotal > 0
 
     def add(self, feats, texts):
         if len(feats) == 0: return

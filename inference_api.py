@@ -1,5 +1,6 @@
 import cv2
 import json
+import time
 import yaml
 import numpy as np
 import logging
@@ -9,14 +10,11 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+from core.exceptions import DetectionError, RecoverableError
 from core.extractors import FeatureExtractor, FontFeatureLibrary, TamperAnalyzer
 from core.detectors import PixelLevelDetector, OriginalityChecker
 from core.utils import NumpyEncoder, safe_read_image
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
 logger = logging.getLogger(__name__)
 
 
@@ -30,7 +28,11 @@ class InferenceEngineAPI:
             self.config = yaml.safe_load(f)
         self.base_dir = config_file.parent
 
-        self.extractor = FeatureExtractor(reader=shared_ocr_reader)
+        preprocess_cfg = self.config.get("preprocessing", {})
+        self.extractor = FeatureExtractor(
+            reader=shared_ocr_reader,
+            preserve_aspect_ratio=preprocess_cfg.get("preserve_aspect_ratio", True),
+        )
         self.font_lib = FontFeatureLibrary()
         font_lib_path = self._resolve_path(self.config['paths']['font_lib_path'])
         self.font_lib.load(font_lib_path)
@@ -43,6 +45,99 @@ class InferenceEngineAPI:
 
         self.originality_checker = OriginalityChecker()
         self._origin_enabled = self.config.get('originality', {}).get('enabled', True)
+
+        self._font_lib_path = font_lib_path
+        self._xgb_path = self._resolve_path(xgb_path)
+
+        registry_path = self.config.get("training", {}).get("registry_path", "models/registry.json")
+        self._registry_path = self._resolve_path(registry_path)
+
+        self._metrics: dict = {
+            "total_predictions": 0,
+            "tampered_count": 0,
+            "suspicious_count": 0,
+            "normal_count": 0,
+            "error_count": 0,
+            "total_inference_time_ms": 0.0,
+            "inference_times_ms": [],
+        }
+
+    def list_model_versions(self) -> dict:
+        """返回模型版本注册表中所有版本。"""
+        registry_path = Path(self._registry_path)
+        if not registry_path.exists():
+            return {"versions": [], "current_model": str(self._xgb_path)}
+        try:
+            with open(registry_path, "r", encoding="utf-8") as f:
+                registry = json.load(f)
+        except (json.JSONDecodeError, OSError):
+            return {"versions": [], "current_model": str(self._xgb_path)}
+        registry["current_model"] = str(self._xgb_path)
+        return registry
+
+    def reload_models(self, version: Optional[str] = None) -> dict:
+        """热重载 FAISS 字体库和 XGBoost 模型，无需重启服务。
+
+        指定 version 时从注册表中查找对应版本路径进行加载。
+        Python 属性赋值是原子的，读取端无锁安全。
+        """
+        result = {"font_lib": "unchanged", "global_model": "unchanged"}
+
+        xgb_path = self._xgb_path
+        font_lib_path = self._font_lib_path
+
+        if version:
+            versions_info = self.list_model_versions()
+            for entry in versions_info.get("versions", []):
+                if entry.get("timestamp") == version:
+                    xgb_path = entry.get("model_path", xgb_path)
+                    font_lib_path = entry.get("font_lib_path", font_lib_path)
+                    result["version"] = version
+                    logger.info("切换到模型版本: %s", version)
+                    break
+            else:
+                logger.warning("未找到版本 %s，使用当前活跃模型", version)
+                result["version"] = "current"
+
+        new_font_lib = FontFeatureLibrary()
+        if new_font_lib.load(font_lib_path):
+            self.font_lib = new_font_lib
+            result["font_lib"] = "reloaded"
+        else:
+            logger.warning("字体库重载失败，保留当前库")
+
+        try:
+            new_model = joblib.load(xgb_path)
+            self.global_model = new_model
+            result["global_model"] = "reloaded"
+        except Exception:
+            logger.warning("全局模型重载失败，保留当前模型", exc_info=True)
+
+        logger.info("模型热重载完成: %s", result)
+        return result
+
+    def get_metrics(self) -> dict:
+        """返回累计推理指标快照。"""
+        times = self._metrics.get("inference_times_ms", [])
+        sorted_times = sorted(times) if times else []
+        n = len(sorted_times)
+        p50 = sorted_times[n // 2] if n > 0 else 0.0
+        p99 = sorted_times[min(n - 1, int(n * 0.99))] if n > 0 else 0.0
+
+        return {
+            "total_predictions": self._metrics["total_predictions"],
+            "tampered_count": self._metrics["tampered_count"],
+            "suspicious_count": self._metrics["suspicious_count"],
+            "normal_count": self._metrics["normal_count"],
+            "error_count": self._metrics["error_count"],
+            "inference_p50_ms": round(p50, 2),
+            "inference_p99_ms": round(p99, 2),
+            "avg_inference_ms": round(
+                self._metrics["total_inference_time_ms"] / max(1, self._metrics["total_predictions"]), 2
+            ),
+            "font_lib_size": self.font_lib.index.ntotal,
+            "font_lib_ready": self.font_lib.is_ready,
+        }
 
     def _resolve_path(self, path_str: str) -> str:
         path = Path(path_str)
@@ -110,11 +205,13 @@ class InferenceEngineAPI:
         precomputed_global_feat: Optional[np.ndarray] = None,
     ) -> str:
         try:
+            _t0 = time.time()
             reasons = []
             result_status = "正常"
 
             img = safe_read_image(full_image_path)
             if img is None:
+                self._metrics["error_count"] += 1
                 return json.dumps({"result": "错误", "reason": "无法读取图片或路径不存在"}, ensure_ascii=False)
 
             img_h, img_w = img.shape[:2]
@@ -175,8 +272,12 @@ class InferenceEngineAPI:
             text_profile = self._profile_numeric_text(extracted_text, max_len)
             should_use_font_signal = bool(text_profile["should_use_font_signal"])
 
+            # 字体库冷启动降级：库为空时跳过字体信号，像素权重自动提升
+            if not self.font_lib.is_ready:
+                should_use_font_signal = False
+
             # 批量字体相似度查询
-            font_sims = self.font_lib.search_similarity_batch(feats) if feats else []
+            font_sims = self.font_lib.search_similarity_batch(feats) if (feats and self.font_lib.is_ready) else []
             font_sim = np.mean(font_sims) if font_sims else 0.5
             font_anomaly = max(0.0, 1.0 - font_sim)
 
@@ -271,15 +372,38 @@ class InferenceEngineAPI:
                 "bbox": [int(i) for i in [x, y, w, h]],
                 "reason": "；".join(reasons),
             }
+
+            elapsed_ms = (time.time() - _t0) * 1000.0
+            self._metrics["total_predictions"] += 1
+            self._metrics["total_inference_time_ms"] += elapsed_ms
+            self._metrics["inference_times_ms"].append(elapsed_ms)
+            if result_status == "篡改":
+                self._metrics["tampered_count"] += 1
+            elif result_status == "可疑":
+                self._metrics["suspicious_count"] += 1
+            else:
+                self._metrics["normal_count"] += 1
+
             return json.dumps(output, ensure_ascii=False, indent=4, cls=NumpyEncoder)
 
-        except Exception as e:
-            logger.error(f"引擎推理引发未捕获异常: {e}", exc_info=True)
+        except RecoverableError as e:
+            self._metrics["error_count"] += 1
+            logger.warning("可恢复的业务异常: %s", e)
             error_output = {
                 "result": "错误",
                 "confidence": 0.0,
                 "bbox": roi_bbox,
-                "reason": f"引擎内部解析失败: {str(e)}",
+                "reason": str(e),
+            }
+            return json.dumps(error_output, ensure_ascii=False, indent=4, cls=NumpyEncoder)
+        except Exception as e:
+            self._metrics["error_count"] += 1
+            logger.error("引擎推理引发未捕获系统异常: %s", e, exc_info=True)
+            error_output = {
+                "result": "错误",
+                "confidence": 0.0,
+                "bbox": roi_bbox,
+                "reason": "引擎内部解析失败，请联系运维排查",
             }
             return json.dumps(error_output, ensure_ascii=False, indent=4, cls=NumpyEncoder)
 
