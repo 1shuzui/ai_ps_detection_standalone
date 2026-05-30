@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "timestamp": "20260530_155517",
+  "total_samples": 448,
+  "positive_samples": 352,
+  "negative_samples": 96,
+  "font_library_size": 0,
+  "model_path": "/home/quyu/ai_detection_standalone/models/trained/global_layout_model_20260530_155517.pkl",
+  "font_lib_path": "/home/quyu/ai_detection_standalone/models/trained/font_lib",
+  "visualizations": [],
+  "train_accuracy": 0.9955357142857143
+}

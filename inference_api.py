@@ -1,5 +1,6 @@
 import cv2
 import json
+import math
 import time
 import yaml
 import numpy as np
@@ -51,6 +52,9 @@ class InferenceEngineAPI:
 
         registry_path = self.config.get("training", {}).get("registry_path", "models/registry.json")
         self._registry_path = self._resolve_path(registry_path)
+
+        calib_cfg = self.config.get("thresholds", {})
+        self._calibration_temp = float(calib_cfg.get("calibration_temperature", 1.0))
 
         self._metrics: dict = {
             "total_predictions": 0,
@@ -144,6 +148,13 @@ class InferenceEngineAPI:
         if path.is_absolute():
             return str(path)
         return str((self.base_dir / path).resolve())
+
+    @staticmethod
+    def _calibrate_proba(raw_proba: float, temperature: float) -> float:
+        """二次校准：温度缩放防止 XGBoost 极端置信度。temperature > 1 压低极端值。"""
+        p = max(1e-3, min(1.0 - 1e-3, raw_proba))
+        logit = math.log(p / (1.0 - p))
+        return 1.0 / (1.0 + math.exp(-logit / temperature))
 
     @staticmethod
     def _clip_bbox_xyxy(bbox_xyxy: List[int], img_w: int, img_h: int) -> Tuple[int, int, int, int]:
@@ -254,7 +265,8 @@ class InferenceEngineAPI:
                 global_feat = precomputed_global_feat
             else:
                 global_feat = self.extractor.extract_global_feature(img)
-            global_fake_prob = float(self.global_model.predict_proba(np.array([global_feat]))[0][1])
+            global_fake_prob_raw = float(self.global_model.predict_proba(np.array([global_feat]))[0][1])
+            global_fake_prob = self._calibrate_proba(global_fake_prob_raw, self._calibration_temp)
 
             # ================== 2. 局部微观分析 ==================
             x_exp, y_exp = max(0, x - margin), max(0, y - margin)
@@ -281,6 +293,14 @@ class InferenceEngineAPI:
             font_sim = np.mean(font_sims) if font_sims else 0.5
             font_anomaly = max(0.0, 1.0 - font_sim)
 
+            # 字体异常分级：仅当 ROI 包含核心文本且匹配度足够时才计入
+            if font_sim < 0.3:
+                effective_font_anomaly = 0.0       # 字体不在库中
+            elif font_sim < 0.5:
+                effective_font_anomaly = font_anomaly * 0.3  # 中匹配缩放
+            else:
+                effective_font_anomaly = font_anomaly         # 高匹配全量
+
             # 像素检测（增加周围背景用于噪声一致性对比）
             surrounding = None
             if margin > 0 and img.size > 0:
@@ -297,10 +317,10 @@ class InferenceEngineAPI:
             if should_use_font_signal and len(extracted_text) > 0:
                 local_tamper_prob = (
                     pixel_anomaly * weights.get('core_pixel', 0.6)
-                    + font_anomaly * weights.get('core_font', 0.4)
+                    + effective_font_anomaly * weights.get('core_font', 0.4)
                     + geo_penalty
                 )
-                if text_profile["digit_count"] >= 8 and font_anomaly > 0.75:
+                if text_profile["digit_count"] >= 8 and effective_font_anomaly > 0.75:
                     local_tamper_prob = max(local_tamper_prob, thresh_low + 0.02)
             else:
                 local_tamper_prob = (pixel_anomaly * weights.get('non_core_pixel', 0.8)) + geo_penalty
@@ -309,42 +329,52 @@ class InferenceEngineAPI:
 
             local_tamper_prob = max(0.0, min(1.0, float(local_tamper_prob)))
 
-            # ================== 4. 融合策略（max + 一致信号加成） ==================
-            # 基准：取最强信号
-            final_risk = max(global_fake_prob, local_tamper_prob, metadata_risk)
+            # ================== 4. 融合策略：两层 AI 篡改检测 ==================
+            # 第一层：全图 AI 生成特征（全局模型）
+            global_ai_score = global_fake_prob
 
-            if fusion_method == "max":
-                pass  # 直接使用 max 结果
+            # 第二层：ROI 局部异常（像素 + 字体 + 几何）
+            local_anomaly = max(local_tamper_prob, float(geo_penalty))
+
+            # 融合：全局 AI 信号 + 局部异常交叉验证
+            if global_ai_score > thresh_global and local_anomaly > 0.50:
+                # 全局和局部都异常 → AI 局部篡改，高置信度
+                final_risk = (global_ai_score + local_anomaly) / 2.0
+            elif global_ai_score > thresh_global:
+                # 仅全局异常 → EXIF + 元数据辅助判定可信度
+                _has_exif = 0
+                if self._origin_enabled:
+                    _of, _, _ = self.originality_checker.extract_features(full_image_path)
+                    _has_exif = _of.get("has_exif", 0) if _of else 0
+
+                # 元数据强证据时提升全局信号（有EXIF+低色彩熵=AI生成特征）
+                _effective_global = global_ai_score
+                # 元数据强证据时提升全局信号
+                if _has_exif and metadata_risk >= 0.50 and 0.68 <= global_ai_score < 0.85:
+                    _effective_global = min(0.95, global_ai_score + 0.25)
+
+                # EXIF 分级乘数：全局越确信，乘数越高
+                if _has_exif:
+                    if _effective_global >= 0.75:
+                        g_mult = 0.73
+                    else:
+                        g_mult = 0.60
+                elif _effective_global > 0.90:
+                    g_mult = 0.70
+                else:
+                    g_mult = 0.50
+                final_risk = _effective_global * g_mult + local_anomaly * (1.0 - g_mult) * 0.5
             else:
-                # 加权融合：max 保底 + 多信号一致时加成
-                signals_above_threshold = 0
-                if global_fake_prob > thresh_global * 0.8:
-                    signals_above_threshold += 1
-                if local_tamper_prob > thresh_low * 0.9:
-                    signals_above_threshold += 1
-                if metadata_risk > 0.4:
-                    signals_above_threshold += 1
-
-                if signals_above_threshold >= 2:
-                    agreement_bonus = 0.08 if signals_above_threshold == 2 else 0.12
-                    final_risk = min(1.0, final_risk + agreement_bonus)
-
-                # 同时用加权平均值做参考上限
-                components = []
-                component_weights = []
-                if global_fake_prob > 0:
-                    components.append(global_fake_prob)
-                    component_weights.append(w_global)
-                if local_tamper_prob > 0:
-                    components.append(local_tamper_prob)
-                    component_weights.append(w_local)
-                if metadata_risk > 0:
-                    components.append(metadata_risk)
-                    component_weights.append(0.15)
-                if components:
-                    total_w = sum(component_weights)
-                    weighted_avg = sum(c * w / total_w for c, w in zip(components, component_weights))
-                    final_risk = max(final_risk, weighted_avg * 0.7)
+                # 全局正常 → 局部 + 元数据兜底
+                if local_anomaly > 0.80:
+                    final_risk = local_anomaly * 0.90
+                else:
+                    final_risk = local_anomaly * 0.70
+                # 元数据强异常兜底（排除纯色彩均匀，白底文档常见）
+                if metadata_risk >= 0.50 and any(
+                    r for r in reasons if "EXIF" in r or "体积" in r or "结构" in r
+                ):
+                    final_risk = max(final_risk, 0.52)
 
             final_risk = max(0.0, min(1.0, float(final_risk)))
 
@@ -353,7 +383,7 @@ class InferenceEngineAPI:
                 reasons.append("全局UI布局异常")
             if pixel_anomaly > thresh_pixel_alert:
                 reasons.append("存在局部边缘拼接/像素涂抹痕迹")
-            if should_use_font_signal and font_anomaly > 0.55:
+            if should_use_font_signal and font_anomaly > 0.65:
                 reasons.append("局部字体风格异常")
             if geo_penalty > 0:
                 reasons.extend(geo_reasons)

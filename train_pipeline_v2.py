@@ -17,6 +17,8 @@ import numpy as np
 import re
 import xgboost as xgb
 import yaml
+from sklearn.calibration import CalibratedClassifierCV
+from sklearn.model_selection import train_test_split
 from PIL import Image
 
 from core.augmentations import build_global_augmentations, build_roi_augmentations
@@ -90,7 +92,7 @@ class TrainPipeline:
                     continue
                 # 全局特征 + 增强
                 augs = build_global_augmentations(img, key=os.path.basename(img_path))
-                for aug_img, aug_name in augs:
+                for aug_name, aug_img in augs:
                     feat = self.extractor.extract_global_feature(aug_img)
                     global_X.append(feat)
                     global_y.append(label)
@@ -112,7 +114,7 @@ class TrainPipeline:
                 if img is None:
                     continue
                 augs = build_global_augmentations(img, key=os.path.basename(fb_img_path))
-                for aug_img, aug_name in augs:
+                for aug_name, aug_img in augs:
                     feat = self.extractor.extract_global_feature(aug_img)
                     global_X.append(feat)
                     global_y.append(1)
@@ -134,11 +136,42 @@ class TrainPipeline:
             new_font_lib.save(font_lib_path)
             logger.info("字体库已保存: %s (共 %d 条)", font_lib_path, len(all_font_labels))
 
-        # 训练全局模型
+        # 训练全局模型（含 Platt 校准 + 早停）
         X = np.array(global_X)
         y = np.array(global_y)
-        model = xgb.XGBClassifier(max_depth=6, n_estimators=150, eval_metric="logloss")
-        model.fit(X, y)
+
+        # 划分验证集用于早停
+        if len(X) >= 10:
+            X_train, X_val, y_train, y_val = train_test_split(
+                X, y, test_size=0.15, random_state=42, stratify=y
+            )
+        else:
+            X_train, X_val, y_train, y_val = X, None, y, None
+
+        base_model = xgb.XGBClassifier(
+            max_depth=4,
+            n_estimators=200,
+            learning_rate=0.05,
+            subsample=0.8,
+            colsample_bytree=0.8,
+            reg_alpha=0.1,
+            reg_lambda=1.0,
+            eval_metric="logloss",
+            random_state=42,
+        )
+
+        if X_val is not None and len(X_val) > 0:
+            base_model.fit(
+                X_train, y_train,
+                eval_set=[(X_val, y_val)],
+                verbose=False,
+            )
+        else:
+            base_model.fit(X_train, y_train)
+
+        # Platt scaling 校准：将 XGBoost 原始概率映射到校准概率
+        model = CalibratedClassifierCV(base_model, method="sigmoid", cv=3)
+        model.fit(X_train, y_train)
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         model_path = str(self.output_dir / f"global_layout_model_{timestamp}.pkl")
@@ -281,7 +314,7 @@ class TrainPipeline:
             if char_img.size == 0:
                 continue
             augs = build_roi_augmentations(char_img, key=f"{img_path}_{x1}_{y1}")
-            for aug_img, aug_name in augs:
+            for aug_name, aug_img in augs:
                 tensor = self.extractor.transform_local(aug_img)
                 if self.extractor.device.type == "cuda":
                     tensor = tensor.cpu()
@@ -354,7 +387,7 @@ class TrainPipeline:
             for frac in train_sizes:
                 n = max(10, int(len(X) * frac))
                 idx = np.random.choice(len(X), n, replace=False)
-                sub_model = xgb.XGBClassifier(max_depth=6, n_estimators=80, eval_metric="logloss")
+                sub_model = xgb.XGBClassifier(max_depth=4, n_estimators=100, learning_rate=0.05, subsample=0.8, colsample_bytree=0.8, eval_metric="logloss")
                 sub_model.fit(X[idx], y[idx])
                 scores.append(sub_model.score(X, y))
             ax.plot(train_sizes * 100, scores, "b-o")

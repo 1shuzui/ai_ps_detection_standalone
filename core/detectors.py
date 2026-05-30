@@ -257,6 +257,7 @@ class OriginalityChecker:
             reasons.append("缺少EXIF且图像结构异常(疑似生成图)")
         if feats.get("color_entropy", 99.0) <= 1.8:
             risk = max(risk, 0.55)
+            reasons.append("色彩分布过于均匀(疑似生成图或纯色背景)")
         if feats.get("size_per_pixel", 0.0) >= 0.3:
             risk = max(risk, 0.50)
             reasons.append("文件体积/像素比异常(疑似工具导出)")

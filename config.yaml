@@ -3,9 +3,6 @@ paths:
   font_lib_path: "models/font_lib"
   # XGBoost 全局排版校验模型路径
   xgb_model_path: "models/global_layout_model.pkl"
-  # 日志文件路径
-  log_file: "logs/system_run.log"
-
 # 服务运行时配置
 server:
   storage_dir: "data/storage"       # 任务文件存储目录（非 /tmp，避免重启丢失）
@@ -56,7 +53,7 @@ fusion:
 pixel_detector:
   generator_enabled: true          # 是否启用生成器假图检测
   generator_bg_var_threshold: 0.05 # 背景方差低于此值触发
-  generator_penalty: 0.70          # 生成器假图惩罚分（可调低以降低白底文档误报）
+  generator_penalty: 0.70          # 生成器假图惩罚分
   noise_consistency_weight: 0.15   # 噪声一致性检测权重
   color_consistency_weight: 0.10   # 颜色一致性检测权重
   dct_analysis_enabled: true        # 是否启用 DCT 频域分析（AI 生成图检测）
@@ -78,7 +75,7 @@ feedback:
 logging:
   json_format: false               # 是否输出 JSON 格式日志（接入 ELK/Loki 时开启）
   log_level: "INFO"                # 日志级别: DEBUG/INFO/WARNING/ERROR
-  log_file: ""                     # 日志文件路径，为空则仅输出到控制台
+  log_file: "logs/app.log"          # 日志文件路径
 
 # 训练与可视化
 training:

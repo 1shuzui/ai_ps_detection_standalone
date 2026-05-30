@@ -1,0 +1,11 @@
+{
+  "versions": [
+    {
+      "timestamp": "20260530_155517",
+      "model_path": "/home/quyu/ai_detection_standalone/models/trained/global_layout_model_20260530_155517.pkl",
+      "font_lib_path": "/home/quyu/ai_detection_standalone/models/trained/font_lib",
+      "train_accuracy": 0.9955357142857143,
+      "total_samples": 448
+    }
+  ]
+}
