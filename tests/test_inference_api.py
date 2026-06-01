@@ -80,3 +80,30 @@ class TestTextProfile:
         assert profile["digit_count"] == 14
         # 长数字带订单关键词也算核心候选
         assert profile["is_core_candidate"] == 1.0
+
+
+class TestMetadataHardTamper:
+    @staticmethod
+    def _make_engine():
+        return InferenceEngineAPI.__new__(InferenceEngineAPI)
+
+    def test_file_size_metadata_is_hard_tamper_evidence(self):
+        engine = self._make_engine()
+        assert engine._has_hard_metadata_evidence(
+            0.50,
+            ["文件体积/像素比异常(疑似工具导出)"],
+        )
+
+    def test_structural_metadata_is_hard_tamper_evidence(self):
+        engine = self._make_engine()
+        assert engine._has_hard_metadata_evidence(
+            0.55,
+            ["缺少EXIF且图像结构异常(疑似生成图)", "色彩分布过于均匀(疑似生成图或纯色背景)"],
+        )
+
+    def test_color_uniformity_alone_is_not_hard_tamper_evidence(self):
+        engine = self._make_engine()
+        assert not engine._has_hard_metadata_evidence(
+            0.55,
+            ["色彩分布过于均匀(疑似生成图或纯色背景)"],
+        )

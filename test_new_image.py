@@ -14,6 +14,9 @@ from inference_api import InferenceEngineAPI
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# 手工盲测脚本，不是 pytest 用例；函数参数由 __main__ 分支传入。
+__test__ = False
+
 def test_raw_image(image_path, engine, ocr_reader, output_dir="results/new_tests"):
     logger.info(f"正在处理图片: {os.path.basename(image_path)}")
 

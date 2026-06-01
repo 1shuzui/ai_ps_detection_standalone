@@ -165,8 +165,8 @@ def main():
 
     for category, entries, expected_ok in [
         ("正常图片 (no)", all_results["no"], lambda d: d["result"] == "正常"),
-        ("篡改图片 (p)", all_results["p"], lambda d: d["result"] in ("篡改", "可疑")),
-        ("测试图片 (pptest)", all_results["pptest"], lambda d: d["result"] in ("篡改", "可疑")),
+        ("篡改图片 (p)", all_results["p"], lambda d: d["result"] == "篡改"),
+        ("测试图片 (pptest)", all_results["pptest"], lambda d: d["result"] == "篡改"),
     ]:
         ok = sum(1 for d, _ in entries if expected_ok(d))
         total = len(entries)
